@@ -1,12 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Grandstander:wght@400;700&display=swap');
+/* styles.css */
+
+/* ============================ */
+/* Fuentes importadas desde Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 @import url('https://fonts.googleapis.com/css2?family=Little+Flowers&display=swap');
 
+/* ---------- Reset y tipografía general ---------- */
 html, body {
   margin: 0;
   padding: 0;
   overflow: hidden;
-  font-family: 'Grandstander', cursive;
+  font-family: 'Little Flowers', cursive;
   height: 100%;
+  /* Fondo de rayas suave (verde claro / crema) */
   background: #d1d8c0;
   background-image:
     linear-gradient(
@@ -36,25 +42,26 @@ html, body {
   color: #5c5c5c;
 }
 
-/* Canvas para confeti (por encima de todo) */
+/* ---------- Canvas de confeti (por encima de todo) ---------- */
 canvas {
   position: fixed;
   top: 0;
   left: 0;
-  z-index: 3;
-  pointer-events: none;
+  z-index: 3;          /* Asegura que el confeti caiga por encima */
+  pointer-events: none;/* Evita interacción sobre el canvas */
 }
 
+/* ---------- Contenedor general ---------- */
 .container {
-  z-index: 1;
   position: relative;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  z-index: 1;
 }
 
-/* Sobre animado */
+/* ========================= Sobre animado ========================= */
 .envelope {
   width: 180px;
   height: 120px;
@@ -94,84 +101,85 @@ canvas {
   color: black;
 }
 
-/* Tarjeta más grande para acomodar texto dentro del círculo */
+/* ======================== Tarjeta base ======================== */
 .card {
   position: relative;
   width: 500px;
   height: 750px;
+  /* Fondo con la imagen completa (rayas, círculo, flores, Spirit) */
   background: url('invitacion-base.png') no-repeat center top;
   background-size: cover;
-  display: none;
+  display: none;        /* Se muestra tras abrir el sobre */
   border-radius: 12px;
   box-shadow: 0 0 20px rgba(0,0,0,0.2);
   z-index: 1;
 }
 
-/* Texto principal envuelto en spans para animar letras */
+/* ======================== Texto principal "Raquel" ======================== */
 .texto-principal {
   position: absolute;
-  top: 60px;
+  top: 12%;             /* Subido ligeramente (antes 18%) para que quede más arriba */
   left: 50%;
   transform: translateX(-50%);
-  width: 360px;
+  width: 340px;         /* Ajuste de ancho para centrado dentro del círculo */
   text-align: center;
   z-index: 2;
   color: #c24a4a;
-  font-size: 2.6em;
+  font-family: 'Great Vibes', cursive;
+  font-size: 4.9em;     /* Aumentado respecto al valor anterior (3.2em) */
   line-height: 1em;
-  font-family: 'Grandstander', cursive;
 }
 .texto-principal span {
   display: inline-block;
-  opacity: 0;
+  opacity: 0;           /* Cada letra inicia invisible para animarse luego */
 }
 
-/* "cumple 2 años!" */
+/* ================= Subtítulo "cumple 2 años!" ================= */
 .texto-secundario {
   position: absolute;
-  top: 130px;
+  top: 22%;             /* Ligeramente ajustado hacia arriba */
   left: 50%;
   transform: translateX(-50%);
-  width: 360px;
+  width: 340px;
   text-align: center;
   z-index: 2;
   color: #5c5c5c;
   font-family: 'Little Flowers', cursive;
-  font-size: 1.3em;
+  font-size: 1.8em;     /* Aumentado para mayor visibilidad */
   line-height: 1.2em;
 }
 .texto-secundario span {
   display: inline-block;
-  opacity: 0;
+  opacity: 0;           /* Cada letra invisible para animarse */
 }
 
-/* Detalles del evento dentro del círculo */
+/* ====================== Detalles dentro del círculo ====================== */
 .details {
   position: absolute;
-  top: 200px;
+  top: 29%;             /* Ajustado un poco más arriba */
   left: 50%;
   transform: translateX(-50%);
   width: 360px;
   text-align: center;
   z-index: 2;
   font-family: 'Little Flowers', cursive;
-  font-size: 1em;
+  font-size: 1em;     /* Un poco más grande que antes */
   color: #5c5c5c;
-  opacity: 0;
+  opacity: 0;           /* Se mostrará tras animación de letras */
 }
 .details span {
   display: block;
-  margin: 6px 0;
+  margin: 8px 0;        /* Espaciado vertical uniforme */
 }
 .details strong {
   color: #8b5e3c;
   font-weight: 700;
 }
 
-/* Botón movido hacia abajo */
+/* ================= Botón "Confirmar asistencia" ================= */
 #btn-mostrar-form {
   position: absolute;
-  top: 650px; /* Ajustado al fondo de la tarjeta */
+  top: 650px;           /* Fijo en la parte inferior de la tarjeta */
   left: 50%;
   transform: translateX(-50%);
   z-index: 2;
@@ -181,35 +189,35 @@ canvas {
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  font-size: 1.1em;
+  font-size: 1.2em;     /* Ligeramente más grande */
   font-family: 'Little Flowers', cursive;
   box-shadow: 0 0 10px rgba(0,0,0,0.1);
-  opacity: 0; /* Inicialmente oculto hasta la animación */
+  opacity: 0;           /* Aparece tras la animación de contenido */
 }
 #btn-mostrar-form:hover {
   background: #f0c420;
 }
 
-/* Formulario de confirmación centrado (por encima del botón) */
+/* ================== Formulario de confirmación centrado ================== */
 form {
   position: absolute;
-  top: 50%; /* Casi al centro vertical */
+  top: 50%;             /* Centrado vertical de la tarjeta */
   left: 50%;
   transform: translate(-50%, -50%);
-  z-index: 4; /* Encima de todo */
+  z-index: 4;           /* Por encima de todos los elementos */
   width: 80%;
   max-width: 360px;
-  display: none;
+  display: none;        /* Se revela al presionar el botón */
   flex-direction: column;
   gap: 15px;
   background: rgba(255,255,255,0.95);
-  padding: 15px;
+  padding: 20px;        /* Un poco más de espacio interno */
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 input, button {
-  padding: 10px;
-  font-size: 1em;
+  padding: 14px;        /* Campos e botón más grandes */
+  font-size: 1.2em;     /* Texto interno más grande */
   border-radius: 5px;
   border: none;
 }
@@ -227,7 +235,7 @@ button:hover {
   background: #f0c420;
 }
 
-/* Mensaje de confirmación centrado */
+/* ====================== Mensaje de confirmación ====================== */
 #mensaje-confirmacion {
   position: fixed;
   top: 50%;
@@ -235,15 +243,16 @@ button:hover {
   transform: translate(-50%, -50%);
   z-index: 5;
   background: rgba(255,255,255,0.95);
-  padding: 15px 25px;
+  padding: 25px 35px;   /* Más amplio para mejor proporción */
   border-radius: 8px;
   display: none;
   font-family: 'Little Flowers', cursive;
   color: #5c5c5c;
+  font-size: 1.3em;     /* Texto de confirmación más grande */
   box-shadow: 0 0 10px rgba(0,0,0,0.2);
 }
 
-/* Música oculta */
+/* ====================== Música de fondo oculta ====================== */
 audio {
   display: none;
 }

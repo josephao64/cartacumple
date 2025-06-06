@@ -1,3 +1,5 @@
+// script.js
+
 const envelope = document.getElementById("envelope");
 const card = document.getElementById("card");
 const musica = document.getElementById("musica");
@@ -10,7 +12,7 @@ const mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
 envelope.addEventListener("click", () => {
   gsap.to(envelope, {
     scale: 0,
-    duration: 0.6,
+    duration: 0.8,           // Animación un poco más lenta
     ease: "power2.in",
     onComplete: () => {
       envelope.style.display = "none";
@@ -22,7 +24,7 @@ envelope.addEventListener("click", () => {
       // Mostrar tarjeta
       gsap.fromTo(card,
         { scale: 0.8, opacity: 0 },
-        { duration: 1, scale: 1, opacity: 1, ease: "back.out(1.7)", onComplete: animarContenido }
+        { duration: 1.2, scale: 1, opacity: 1, ease: "back.out(1.7)", onComplete: animarContenido }
       );
     }
   });
@@ -50,23 +52,29 @@ function prepararAnimacionDeLetras() {
 
 // Una vez que la tarjeta aparece, animamos letras, detalles y botón
 function animarContenido() {
-  // Animar título y subtítulo
+  // Animar título y subtítulo lentamente
   const allSpans = card.querySelectorAll(".animar-letras span");
   gsap.fromTo(allSpans,
     { opacity: 0, y: 20 },
-    { opacity: 1, y: 0, stagger: 0.05, duration: 0.6, ease: "back.out(1.5)" }
+    {
+      opacity: 1,
+      y: 0,
+      stagger: 0.1,    // letras más lentas
+      duration: 1.0,   // cada letra toma más tiempo
+      ease: "back.out(1.5)"
+    }
   );
 
   // Mostrar detalles después de las letras
-  gsap.to(details, { opacity: 1, delay: 1.2, duration: 0.8 });
+  gsap.to(details, { opacity: 1, delay: 1.5, duration: 1.0 });
 
   // Mostrar botón para mostrar formulario después de detalles
-  gsap.to(btnMostrarForm, { opacity: 1, delay: 1.8, duration: 0.8 });
+  gsap.to(btnMostrarForm, { opacity: 1, delay: 2.5, duration: 1.0 });
 }
 
 // Al hacer clic en el botón "Confirmar asistencia", mostrar formulario centrado
 btnMostrarForm.addEventListener("click", () => {
-  gsap.to(form, { display: "flex", opacity: 1, duration: 0.8 });
+  gsap.to(form, { display: "flex", opacity: 1, duration: 1.0 });
 });
 
 // Manejo del formulario al enviar
@@ -81,8 +89,8 @@ form.addEventListener("submit", function (e) {
   setTimeout(() => {
     mensajeConfirmacion.style.display = "none";
     btnMostrarForm.style.display = "block";
-    // Opcional: restaurar opacidad con GSAP
-    gsap.fromTo(btnMostrarForm, { opacity: 0 }, { opacity: 1, duration: 0.6 });
+    // Restaurar opacidad con GSAP
+    gsap.fromTo(btnMostrarForm, { opacity: 0 }, { opacity: 1, duration: 0.8 });
   }, 2500);
 });
 
