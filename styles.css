@@ -1,0 +1,164 @@
+/* Estilos generales */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  body, html {
+    width: 100%;
+    height: 100%;
+    font-family: 'Baloo 2', cursive;
+    background-color: #f7f5f2;
+    overflow-x: hidden;
+  }
+  
+  /* Contenedor centrado para pantalla de inicio */
+  .start-screen {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #f7f5f2;
+  }
+  
+  /* Estilo del sobre */
+  .envelope {
+    position: relative;
+    width: 180px;
+    height: 100px;
+    background-color: #ffffff;
+    border: 1.5px solid #cccccc;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .envelope::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 180px;
+    height: 50px;
+    background-color: #e0e0e0;
+    clip-path: polygon(0 0, 100% 0, 50% 100%);
+  }
+  
+  /* Animación para abrir/eliminar el sobre */
+  .envelope.open {
+    animation: envelopeOpen 0.9s forwards ease-in;
+  }
+  @keyframes envelopeOpen {
+    0% {
+      transform: scale(1) translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: scale(0.5) translateY(-180px) rotate(45deg);
+      opacity: 0;
+    }
+  }
+  
+  /* Botón "Abrir invitación" */
+  .open-btn {
+    margin-top: 16px;
+    padding: 8px 16px;
+    background-color: #4a7c59;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  .open-btn:hover {
+    background-color: #3b6747;
+  }
+  
+  /* Contenedor de la invitación (oculto inicialmente) */
+  .invitation-container {
+    display: none;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100vh;
+    background-color: #f7f5f2;
+    padding: 16px;
+  }
+  
+  /* Tarjeta de invitación minimalista */
+  .invitation-card {
+    background-color: #ffffff;
+    max-width: 360px;
+    width: 90%;
+    height: 85vh;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    position: relative;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 24px;
+    color: #333333;
+  }
+  
+  /* Mostrar la tarjeta con animación */
+  .invitation-card.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Contenido de la tarjeta */
+  .invitation-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+  }
+  .invitation-content h1 {
+    font-size: 1.9rem;
+    text-align: center;
+    margin-bottom: 12px;
+    color: #4a7c59;
+  }
+  .invitation-content p {
+    font-size: 1rem;
+    line-height: 1.5;
+    text-align: center;
+    flex-grow: 1;
+    margin-top: 8px;
+    margin-bottom: 16px;
+    color: #555555;
+  }
+  
+  /* Botón de confirmar asistencia dentro de la carta */
+  .confirm-btn {
+    padding: 10px 16px;
+    background-color: #e07a5f;
+    color: #ffffff;
+    border: none;
+    border-radius: 4px;
+    font-size: 1rem;
+    cursor: pointer;
+    align-self: center;
+    transition: background-color 0.3s ease;
+  }
+  .confirm-btn:hover {
+    background-color: #c96850;
+  }
+  
+  /* Ajuste en pantallas muy pequeñas */
+  @media (max-width: 360px) {
+    .open-btn, .confirm-btn {
+      width: 100%;
+      font-size: 0.9rem;
+    }
+    .invitation-card {
+      padding: 16px;
+    }
+  }
+  
