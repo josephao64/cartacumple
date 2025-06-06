@@ -3,20 +3,31 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invitación Años 20</title>
+  <title>¡Cumple de Raquel!</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap');
 
-    body {
+    html, body {
       margin: 0;
-      font-family: 'Great Vibes', cursive;
-      background: #fdf6ec; /* Fondo flanco */
-      color: #111;
+      padding: 0;
       overflow: hidden;
+      font-family: 'Chewy', cursive;
+      height: 100%;
+      background: #000;
+    }
+
+    canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 0;
+      pointer-events: none;
     }
 
     .container {
+      z-index: 1;
+      position: relative;
       height: 100vh;
       display: flex;
       justify-content: center;
@@ -26,13 +37,15 @@
     }
 
     .envelope {
-      width: 150px;
-      height: 100px;
-      background: gold;
+      width: 200px;
+      height: 120px;
+      background: #c19a6b;
       position: relative;
       cursor: pointer;
-      transform: rotate(-2deg);
-      box-shadow: 0 0 20px gold;
+      box-shadow: 0 0 20px #8b5e3c;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .envelope::before,
@@ -47,49 +60,66 @@
     .envelope::before {
       top: 0;
       left: 0;
-      border-width: 0 75px 50px 75px;
-      border-color: transparent transparent #fdf6ec transparent;
+      border-width: 0 100px 60px 100px;
+      border-color: transparent transparent #fff transparent;
     }
 
     .envelope::after {
       bottom: 0;
       left: 0;
-      border-width: 50px 75px 0 75px;
-      border-color: #fdf6ec transparent transparent transparent;
+      border-width: 60px 100px 0 100px;
+      border-color: #fff transparent transparent transparent;
+    }
+
+    .envelope span {
+      font-size: 1.2em;
+      z-index: 1;
+      color: #5c3d1a;
     }
 
     .card {
-      border: 4px double gold;
-      padding: 40px;
-      border-radius: 20px;
-      max-width: 600px;
-      background: rgba(255, 255, 255, 0.95);
-      box-shadow: 0 0 20px gold;
+      width: 100%;
+      height: 100vh;
+      background: url('fondo-invitacion.png') no-repeat center center;
+      background-size: cover;
       display: none;
-      color: #111;
+      position: relative;
+      color: #5c3d1a;
+    }
+
+    .card .content {
+      position: absolute;
+      top: 10%;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 80%;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 15px;
     }
 
     h1 {
-      font-size: 3em;
+      font-size: 2.5em;
       margin-bottom: 10px;
     }
 
     p {
-      font-size: 1.3em;
-      margin-bottom: 30px;
+      font-size: 1.2em;
+      margin-bottom: 20px;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 15px;
-      margin-top: 20px;
+      gap: 10px;
+      margin-top: 10px;
     }
 
     input, button {
       padding: 10px;
       font-size: 1em;
-      border-radius: 5px;
+      border-radius: 8px;
       border: none;
     }
 
@@ -99,7 +129,7 @@
     }
 
     button {
-      background: gold;
+      background: #d4af37;
       color: black;
       cursor: pointer;
       transition: background 0.3s ease;
@@ -115,28 +145,38 @@
   </style>
 </head>
 <body>
+  <!-- Confeti -->
+  <canvas id="confetti"></canvas>
+
   <div class="container">
-    <!-- Sobre cerrado -->
-    <div class="envelope" id="envelope" title="Haz clic para abrir"></div>
+    <!-- Sobre -->
+    <div class="envelope" id="envelope" title="Haz clic para abrir">
+      <span>Abrir invitación</span>
+    </div>
 
-    <!-- Tarjeta de invitación -->
+    <!-- Tarjeta -->
     <div class="card" id="card">
-      <h1>¡Estás Invitado!</h1>
-      <p>Ven a celebrar los 50 al estilo Charleston 🥂<br> Sábado 22 de junio · 8:00 PM</p>
+      <div class="content">
+        <h1>¡Raquel cumple 2 años!</h1>
+        <p>Te esperamos para celebrarlo con mucha alegría 🎉</p>
+        <p><strong>📍 Casa Jardín Dominga</strong><br>
+           <strong>📅 22 de junio, desde las 3:00 PM</strong></p>
+        <p><strong>Confirma antes del 19 de junio</strong><br>
+           al <a href="tel:+50242892535">+502 4289-2535</a></p>
 
-      <form id="rsvp-form">
-        <input type="text" name="nombre" placeholder="Tu nombre" required />
-        <input type="tel" name="telefono" placeholder="Tu teléfono" required />
-        <button type="submit">Confirmar asistencia</button>
-      </form>
-      <p id="mensaje-confirmacion" style="display:none; margin-top:20px;">¡Gracias por confirmar! 💃🕺</p>
+        <form id="rsvp-form">
+          <input type="text" name="nombre" placeholder="Tu nombre" required />
+          <input type="tel" name="telefono" placeholder="Tu teléfono" required />
+          <button type="submit">Confirmar asistencia</button>
+        </form>
+
+        <p id="mensaje-confirmacion" style="display:none; margin-top:15px;">¡Gracias por confirmar! 🐎🌸</p>
+      </div>
     </div>
   </div>
 
-  <!-- Música de fondo -->
   <audio id="musica" autoplay loop>
-    <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mpeg" />
-    Tu navegador no soporta audio HTML5.
+    <source src="https://cdn.pixabay.com/download/audio/2022/03/14/audio_4a264e0f77.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
@@ -152,7 +192,7 @@
         onComplete: () => {
           envelope.style.display = "none";
           card.style.display = "block";
-          gsap.fromTo(card, { scale: 0.5, opacity: 0 }, {
+          gsap.fromTo(card, { scale: 0.9, opacity: 0 }, {
             duration: 1,
             scale: 1,
             opacity: 1,
@@ -162,6 +202,7 @@
       });
 
       if (musica.paused) musica.play();
+      startConfetti();
     });
 
     document.getElementById("rsvp-form").addEventListener("submit", function (e) {
@@ -169,6 +210,60 @@
       this.style.display = "none";
       document.getElementById("mensaje-confirmacion").style.display = "block";
     });
+
+    // Confeti
+    const canvas = document.getElementById("confetti");
+    const ctx = canvas.getContext("2d");
+    let particles = [];
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+
+    window.addEventListener("resize", resizeCanvas);
+    resizeCanvas();
+
+    function createParticle() {
+      const colors = ["#d4af37", "#c19a6b", "#8b5e3c"];
+      return {
+        x: Math.random() * canvas.width,
+        y: -20,
+        size: Math.random() * 8 + 4,
+        speed: Math.random() * 2 + 1,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rotation: Math.random() * 360,
+        rotateSpeed: Math.random() * 5
+      };
+    }
+
+    function drawParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate((p.rotation * Math.PI) / 180);
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+        ctx.restore();
+
+        p.y += p.speed;
+        p.rotation += p.rotateSpeed;
+
+        if (p.y > canvas.height) {
+          p.y = -20;
+          p.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawParticles);
+    }
+
+    function startConfetti() {
+      for (let i = 0; i < 100; i++) {
+        particles.push(createParticle());
+      }
+      drawParticles();
+    }
   </script>
 </body>
 </html>
