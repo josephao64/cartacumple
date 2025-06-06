@@ -1,27 +1,25 @@
-// script.js
-
-const envelope = document.getElementById("envelope");
-const card = document.getElementById("card");
-const musica = document.getElementById("musica");
-const details = document.getElementById("details");
-const btnMostrarForm = document.getElementById("btn-mostrar-form");
-const form = document.getElementById("rsvp-form");
-const mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
+const envelope        = document.getElementById("envelope");
+const card            = document.getElementById("card");
+const musica          = document.getElementById("musica");
+const details         = document.getElementById("details");
+const btnMostrarForm  = document.getElementById("btn-mostrar-form");
+const form            = document.getElementById("rsvp-form");
+const mensajeConfirm  = document.getElementById("mensaje-confirmacion");
 
 // Al hacer clic en el sobre, mostrar la tarjeta con animación
 envelope.addEventListener("click", () => {
   gsap.to(envelope, {
     scale: 0,
-    duration: 0.8,           // Animación un poco más lenta
+    duration: 0.8,           // Más lento
     ease: "power2.in",
     onComplete: () => {
       envelope.style.display = "none";
-      card.style.display = "block";
+      card.style.display     = "block";
 
-      // Preparar animación de letras
+      // Envolver letras para animación
       prepararAnimacionDeLetras();
 
-      // Mostrar tarjeta
+      // Aparecer tarjeta
       gsap.fromTo(card,
         { scale: 0.8, opacity: 0 },
         { duration: 1.2, scale: 1, opacity: 1, ease: "back.out(1.7)", onComplete: animarContenido }
@@ -36,58 +34,60 @@ envelope.addEventListener("click", () => {
   startConfetti();
 });
 
-// Envuelve cada letra en un span para animarlas
+// Envuelve cada letra en un <span> para animación
 function prepararAnimacionDeLetras() {
   const elems = card.querySelectorAll(".animar-letras");
   elems.forEach(el => {
-    const text = el.textContent;
+    const txt = el.textContent;
     el.innerHTML = "";
-    text.split("").forEach(char => {
+    txt.split("").forEach(c => {
       const span = document.createElement("span");
-      span.textContent = char;
+      span.textContent = c;
       el.appendChild(span);
     });
   });
 }
 
-// Una vez que la tarjeta aparece, animamos letras, detalles y botón
+// Animar contenido tras aparecer la tarjeta
 function animarContenido() {
-  // Animar título y subtítulo lentamente
+  // Animar cada letra con GSAP, más lento
   const allSpans = card.querySelectorAll(".animar-letras span");
   gsap.fromTo(allSpans,
     { opacity: 0, y: 20 },
     {
       opacity: 1,
       y: 0,
-      stagger: 0.1,    // letras más lentas
-      duration: 1.0,   // cada letra toma más tiempo
+      stagger: 0.1,      // Intervalo más grande entre letras
+      duration: 1.0,     // Animación de letra más lenta
       ease: "back.out(1.5)"
     }
   );
 
-  // Mostrar detalles después de las letras
-  gsap.to(details, { opacity: 1, delay: 1.5, duration: 1.0 });
+  // Mostrar detalles después de la animación de letras
+  gsap.to(details, { opacity: 1, delay: 1.8, duration: 1.0 });
 
-  // Mostrar botón para mostrar formulario después de detalles
-  gsap.to(btnMostrarForm, { opacity: 1, delay: 2.5, duration: 1.0 });
+  // Mostrar botón para formulario después de detalles
+  gsap.to(btnMostrarForm, { opacity: 1, delay: 2.8, duration: 1.0 });
 }
 
-// Al hacer clic en el botón "Confirmar asistencia", mostrar formulario centrado
+// Al hacer clic en "Confirmar asistencia", mostrar formulario centrado
 btnMostrarForm.addEventListener("click", () => {
   gsap.to(form, { display: "flex", opacity: 1, duration: 1.0 });
 });
 
 // Manejo del formulario al enviar
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", function(e) {
   e.preventDefault();
   // Ocultar formulario y botón
   form.style.display = "none";
   btnMostrarForm.style.display = "none";
+
   // Mostrar mensaje de confirmación centrado
-  mensajeConfirmacion.style.display = "block";
-  // Después de 2.5 segundos, esconder mensaje y volver a mostrar botón
+  mensajeConfirm.style.display = "block";
+
+  // Tras 2.5s, ocultar mensaje y mostrar botón de nuevo
   setTimeout(() => {
-    mensajeConfirmacion.style.display = "none";
+    mensajeConfirm.style.display = "none";
     btnMostrarForm.style.display = "block";
     // Restaurar opacidad con GSAP
     gsap.fromTo(btnMostrarForm, { opacity: 0 }, { opacity: 1, duration: 0.8 });
@@ -96,11 +96,11 @@ form.addEventListener("submit", function (e) {
 
 // ======= Código del confeti marrón/dorado =======
 const canvas = document.getElementById("confetti");
-const ctx = canvas.getContext("2d");
+const ctx    = canvas.getContext("2d");
 let particles = [];
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
+  canvas.width  = window.innerWidth;
   canvas.height = window.innerHeight;
 }
 window.addEventListener("resize", resizeCanvas);
@@ -146,4 +146,3 @@ function startConfetti() {
   }
   drawParticles();
 }
-// ================================================================
