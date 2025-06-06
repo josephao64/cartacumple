@@ -2,56 +2,173 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invitación de Cumpleaños Minimalista</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invitación Años 20</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
-  <!-- Google Font: Baloo 2 -->
-  <link
-    href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap"
-    rel="stylesheet"
-  />
+    body {
+      margin: 0;
+      font-family: 'Great Vibes', cursive;
+      background: #fdf6ec; /* Fondo flanco */
+      color: #111;
+      overflow: hidden;
+    }
 
-  <!-- SweetAlert2 CSS -->
-  <link
-    href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"
-    rel="stylesheet"
-  />
+    .container {
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      text-align: center;
+    }
 
-  <!-- Hoja de estilos externa -->
-  <link rel="stylesheet" href="styles.css" />
+    .envelope {
+      width: 150px;
+      height: 100px;
+      background: gold;
+      position: relative;
+      cursor: pointer;
+      transform: rotate(-2deg);
+      box-shadow: 0 0 20px gold;
+    }
+
+    .envelope::before,
+    .envelope::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 0;
+      border-style: solid;
+    }
+
+    .envelope::before {
+      top: 0;
+      left: 0;
+      border-width: 0 75px 50px 75px;
+      border-color: transparent transparent #fdf6ec transparent;
+    }
+
+    .envelope::after {
+      bottom: 0;
+      left: 0;
+      border-width: 50px 75px 0 75px;
+      border-color: #fdf6ec transparent transparent transparent;
+    }
+
+    .card {
+      border: 4px double gold;
+      padding: 40px;
+      border-radius: 20px;
+      max-width: 600px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 20px gold;
+      display: none;
+      color: #111;
+    }
+
+    h1 {
+      font-size: 3em;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.3em;
+      margin-bottom: 30px;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      margin-top: 20px;
+    }
+
+    input, button {
+      padding: 10px;
+      font-size: 1em;
+      border-radius: 5px;
+      border: none;
+    }
+
+    input {
+      background: #eee;
+      color: #333;
+    }
+
+    button {
+      background: gold;
+      color: black;
+      cursor: pointer;
+      transition: background 0.3s ease;
+    }
+
+    button:hover {
+      background: #f0c420;
+    }
+
+    audio {
+      display: none;
+    }
+  </style>
 </head>
 <body>
-  <!-- Contenedor inicial con tarjeta grande animada (como sobre) -->
-  <div class="initial-container" id="initialContainer">
-    <div class="initial-card envelope-like" id="initialCard">
-      <h1>🎠 Invitación Especial</h1>
-      <button class="open-btn" id="openInvitationBtn">Abrir invitación</button>
+  <div class="container">
+    <!-- Sobre cerrado -->
+    <div class="envelope" id="envelope" title="Haz clic para abrir"></div>
+
+    <!-- Tarjeta de invitación -->
+    <div class="card" id="card">
+      <h1>¡Estás Invitado!</h1>
+      <p>Ven a celebrar los 50 al estilo Charleston 🥂<br> Sábado 22 de junio · 8:00 PM</p>
+
+      <form id="rsvp-form">
+        <input type="text" name="nombre" placeholder="Tu nombre" required />
+        <input type="tel" name="telefono" placeholder="Tu teléfono" required />
+        <button type="submit">Confirmar asistencia</button>
+      </form>
+      <p id="mensaje-confirmacion" style="display:none; margin-top:20px;">¡Gracias por confirmar! 💃🕺</p>
     </div>
   </div>
 
-  <!-- Contenedor de la invitación interior (oculto inicialmente) -->
-  <div class="invitation-container" id="invitationContainer">
-    <div class="invitation-card" id="invitationCard">
-      <div class="invitation-content">
-        <div>
-          <h1>🎠 ¡Estás invitado!</h1>
-          <p>
-            Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.<br />
-            Acompáñanos para disfrutar de una jornada inolvidable entre estos hermosos animales.<br />
-            ¡No faltes!
-          </p>
-        </div>
-        <button class="confirm-btn" id="confirmBtn">Confirmar asistencia 🎉</button>
-      </div>
-    </div>
-  </div>
+  <!-- Música de fondo -->
+  <audio id="musica" autoplay loop>
+    <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mpeg" />
+    Tu navegador no soporta audio HTML5.
+  </audio>
 
-  <!-- Scripts externos -->
-  <!-- SweetAlert2 Library -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-  <!-- Canvas Confetti Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <!-- Script principal -->
-  <script type="module" src="script.js"></script>
+  <script>
+    const envelope = document.getElementById("envelope");
+    const card = document.getElementById("card");
+    const musica = document.getElementById("musica");
+
+    envelope.addEventListener("click", () => {
+      gsap.to(envelope, {
+        scale: 0,
+        duration: 0.6,
+        ease: "power2.in",
+        onComplete: () => {
+          envelope.style.display = "none";
+          card.style.display = "block";
+          gsap.fromTo(card, { scale: 0.5, opacity: 0 }, {
+            duration: 1,
+            scale: 1,
+            opacity: 1,
+            ease: "back.out(1.7)"
+          });
+        }
+      });
+
+      if (musica.paused) musica.play();
+    });
+
+    document.getElementById("rsvp-form").addEventListener("submit", function (e) {
+      e.preventDefault();
+      this.style.display = "none";
+      document.getElementById("mensaje-confirmacion").style.display = "block";
+    });
+  </script>
 </body>
 </html>
