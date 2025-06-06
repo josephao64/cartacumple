@@ -31,22 +31,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
   let smallConfettiInterval = null;
 
-  // Función para lanzar un estallido grande de confeti
+  // Función para lanzar un estallido grande de confeti (color café)
   function confetiGrande() {
     confetti({
-      particleCount: 200,
-      spread: 100,
+      particleCount: 150,
+      spread: 80,
       origin: { y: 0.3 },
+      colors: ["#8B4513"], // Café
     });
   }
 
-  // Función para lanzar pequeños destellos de confeti periódicos
+  // Función para lanzar pequeños destellos de confeti periódicos (color café)
   function iniciarConfetiContinuo() {
     smallConfettiInterval = setInterval(() => {
       confetti({
-        particleCount: 20,
-        spread: 50,
+        particleCount: 15,
+        spread: 40,
         origin: { y: 0.2 },
+        colors: ["#8B4513"],
       });
     }, 2500);
   }
@@ -112,11 +114,12 @@ document.addEventListener("DOMContentLoaded", () => {
       if (result.isConfirmed && result.value) {
         const { nombre, personas } = result.value;
 
-        // Lanzar confeti al confirmar (estallido medio)
+        // Lanzar confeti al confirmar (estallido medio, color café)
         confetti({
-          particleCount: 100,
-          spread: 80,
+          particleCount: 80,
+          spread: 60,
           origin: { y: 0.3 },
+          colors: ["#8B4513"],
         });
 
         // Mostrar mensaje de agradecimiento
