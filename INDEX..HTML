@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invitación de Cumpleaños con Caballos</title>
+  <title>Invitación de Cumpleaños Minimalista</title>
 
   <!-- Google Font: Baloo 2 -->
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet" />
@@ -22,7 +22,7 @@
       width: 100%;
       height: 100%;
       font-family: 'Baloo 2', cursive;
-      background-color: #f0ece3;
+      background-color: #f7f5f2;
       overflow-x: hidden;
     }
     /* Contenedor centrado para pantalla de inicio */
@@ -33,33 +33,32 @@
       align-items: center;
       width: 100%;
       height: 100vh;
-      background-color: #f0ece3;
+      background-color: #f7f5f2;
     }
     /* Estilo del sobre */
     .envelope {
       position: relative;
-      width: 200px;
-      height: 120px;
-      background-color: #fff;
-      border: 2px solid #ccc;
-      border-radius: 5px;
+      width: 180px;
+      height: 100px;
+      background-color: #ffffff;
+      border: 1.5px solid #cccccc;
+      border-radius: 4px;
       overflow: hidden;
       cursor: pointer;
     }
-    /* Pala del sobre (triángulo) */
     .envelope::before {
       content: "";
       position: absolute;
       top: 0;
       left: 0;
-      width: 200px;
-      height: 60px;
-      background-color: #ccc;
+      width: 180px;
+      height: 50px;
+      background-color: #e0e0e0;
       clip-path: polygon(0 0, 100% 0, 50% 100%);
     }
     /* Animación para abrir/eliminar el sobre */
     .envelope.open {
-      animation: envelopeOpen 1s forwards ease-in;
+      animation: envelopeOpen 0.9s forwards ease-in;
     }
     @keyframes envelopeOpen {
       0% {
@@ -67,24 +66,24 @@
         opacity: 1;
       }
       100% {
-        transform: scale(0.5) translateY(-200px) rotate(45deg);
+        transform: scale(0.5) translateY(-180px) rotate(45deg);
         opacity: 0;
       }
     }
     /* Botón "Abrir invitación" */
     .open-btn {
-      margin-top: 20px;
-      padding: 10px 20px;
-      background-color: #6b8e23;
-      color: #fff;
+      margin-top: 16px;
+      padding: 8px 16px;
+      background-color: #4a7c59;
+      color: #ffffff;
       border: none;
-      border-radius: 5px;
-      font-size: 1rem;
+      border-radius: 4px;
+      font-size: 0.95rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
     .open-btn:hover {
-      background-color: #5a7a1f;
+      background-color: #3b6747;
     }
     /* Contenedor de la invitación (oculto inicialmente) */
     .invitation-container {
@@ -93,85 +92,77 @@
       align-items: center;
       width: 100%;
       height: 100vh;
-      background-color: #eae1d0;
-      padding: 20px;
+      background-color: #f7f5f2;
+      padding: 16px;
     }
-    /* Tarjeta de invitación */
+    /* Tarjeta de invitación minimalista */
     .invitation-card {
-      background-color: #fff;
-      background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80');
-      background-size: cover;
-      background-position: center;
-      max-width: 400px;
+      background-color: #ffffff;
+      max-width: 360px;
       width: 90%;
-      height: 90vh;
-      border-radius: 15px;
-      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      height: 85vh;
+      border-radius: 8px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
       position: relative;
       opacity: 0;
-      transform: scale(0.8);
+      transform: translateY(20px);
       transition: opacity 0.6s ease, transform 0.6s ease;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      padding: 20px;
-      color: #333;
+      padding: 24px;
+      color: #333333;
     }
     /* Mostrar la tarjeta con animación */
     .invitation-card.show {
       opacity: 1;
-      transform: scale(1);
+      transform: translateY(0);
     }
-    /* Superposición semitransparente para legibilidad del texto */
-    .invitation-overlay {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(255, 255, 255, 0.85);
-      border-radius: 15px;
-      z-index: 1;
-    }
-    /* Contenido de la tarjeta (por encima de la superposición) */
+    /* Contenido de la tarjeta */
     .invitation-content {
-      position: relative;
-      z-index: 2;
       flex: 1;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
     }
     .invitation-content h1 {
-      font-size: 2rem;
+      font-size: 1.9rem;
       text-align: center;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
+      color: #4a7c59;
     }
     .invitation-content p {
-      font-size: 1.1rem;
-      line-height: 1.4;
+      font-size: 1rem;
+      line-height: 1.5;
+      text-align: center;
+      flex-grow: 1;
+      margin-top: 8px;
+      margin-bottom: 16px;
+      color: #555555;
     }
-    /* Botón de confirmar asistencia en la tarjeta */
+    /* Botón de confirmar asistencia dentro de la carta */
     .confirm-btn {
-      padding: 10px 20px;
-      background-color: #ff69b4;
-      color: #fff;
+      padding: 10px 16px;
+      background-color: #e07a5f;
+      color: #ffffff;
       border: none;
-      border-radius: 5px;
+      border-radius: 4px;
       font-size: 1rem;
       cursor: pointer;
       align-self: center;
-      margin-top: 20px;
       transition: background-color 0.3s ease;
     }
     .confirm-btn:hover {
-      background-color: #e55a9b;
+      background-color: #c96850;
     }
     /* Ajuste en pantallas muy pequeñas */
     @media (max-width: 360px) {
       .open-btn, .confirm-btn {
         width: 100%;
         font-size: 0.9rem;
+      }
+      .invitation-card {
+        padding: 16px;
       }
     }
   </style>
@@ -186,9 +177,6 @@
   <!-- Contenedor de la invitación (oculto inicialmente) -->
   <div class="invitation-container" id="invitationContainer">
     <div class="invitation-card" id="invitationCard">
-      <!-- Superposición semitransparente para que el texto sea legible -->
-      <div class="invitation-overlay"></div>
-      <!-- Contenido real de la invitación -->
       <div class="invitation-content">
         <div>
           <h1>🎠 ¡Estás invitado!</h1>
@@ -203,9 +191,6 @@
     </div>
   </div>
 
-  <!-- Elemento de audio para la música de fondo -->
-  <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2021/09/11/audio_ae0fb7896d.mp3?filename=happy-birthday-to-you-6039.mp3" loop></audio>
-
   <!-- Scripts externos -->
   <!-- SweetAlert2 Library -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
@@ -213,18 +198,7 @@
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
   <!-- Firebase SDK v10+ (ES6 Modules) -->
   <script type="module">
-    // ==== CONFIGURACIÓN DE FIREBASE (REEMPLAZAR CON TUS PROPIAS CREDENCIALES) ====
-    const firebaseConfig = {
-      apiKey: "TU_API_KEY",
-      authDomain: "TU_PROJECT_ID.firebaseapp.com",
-      projectId: "TU_PROJECT_ID",
-      storageBucket: "TU_PROJECT_ID.appspot.com",
-      messagingSenderId: "TU_MESSAGING_SENDER_ID",
-      appId: "TU_APP_ID"
-      // Si usas measurements o otros servicios, agrégalos aquí
-    };
-
-    // Importar módulos necesarios de Firebase
+    // ==== CONFIGURACIÓN DE FIREBASE CON TUS CREDENCIALES PROPORCIONADAS ====
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
     import {
       getFirestore,
@@ -233,65 +207,72 @@
       serverTimestamp
     } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
 
-    // Inicializar Firebase y Firestore
+    // Tu web app's Firebase configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsBilZaGjEyO-ZqEXFowXrjFT-794TPlE",
+      authDomain: "carta-cumple.firebaseapp.com",
+      projectId: "carta-cumple",
+      storageBucket: "carta-cumple.firebasestorage.app",
+      messagingSenderId: "431208595093",
+      appId: "1:431208595093:web:88cc6628ab14ed8835659c"
+    };
+
+    // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
     // ==============================================================================
 
     document.addEventListener("DOMContentLoaded", () => {
-      // Elementos del DOM
       const envelope = document.getElementById("envelope");
       const openBtn = document.getElementById("openInvitationBtn");
       const startScreen = document.getElementById("startScreen");
       const invitationContainer = document.getElementById("invitationContainer");
       const invitationCard = document.getElementById("invitationCard");
-      const bgMusic = document.getElementById("bgMusic");
       const confirmBtn = document.getElementById("confirmBtn");
 
-      let musicPlayed = false; // Para controlar intento de reproducción
+      let smallConfettiInterval = null;
 
-      // Función para lanzar confeti
-      function lanzarConfeti() {
+      // Función para lanzar un estallido grande de confeti
+      function confetiGrande() {
         confetti({
-          particleCount: 150,
-          spread: 60,
+          particleCount: 200,
+          spread: 100,
           origin: { y: 0.3 }
         });
       }
 
-      // Intentar reproducir música (puede ser bloqueada hasta interacción)
-      function playMusic() {
-        if (!musicPlayed) {
-          bgMusic.play().catch(() => {
-            // Si falla, se intentará reproducir al próximo clic del usuario
+      // Función para lanzar pequeños destellos de confeti periódicos
+      function iniciarConfetiContinuo() {
+        smallConfettiInterval = setInterval(() => {
+          confetti({
+            particleCount: 20,
+            spread: 50,
+            origin: { y: 0.2 }
           });
-          musicPlayed = true;
-        }
+        }, 2500);
       }
 
-      // Manejar clic en el botón "Abrir invitación"
+      // Manejar clic en "Abrir invitación"
       openBtn.addEventListener("click", () => {
         // Animar cierre del sobre
         envelope.classList.add("open");
-        // Intentar reproducir música en este momento
-        playMusic();
-        // Después de la animación del sobre (1s), mostrar la tarjeta
+
+        // Después de la animación del sobre (0.9s), mostrar la tarjeta
         setTimeout(() => {
           // Ocultar pantalla de inicio
           startScreen.style.display = "none";
           // Mostrar contenedor de invitación
           invitationContainer.style.display = "flex";
-          // Pequeño retraso antes de mostrar la tarjeta para animación
+          // Animar aparición de la tarjeta
           requestAnimationFrame(() => {
             invitationCard.classList.add("show");
-            // Lanzar confeti cuando aparezca la tarjeta
-            lanzarConfeti();
+            // Lanzar confeti grande al abrir
+            confetiGrande();
+            // Iniciar confeti continuo (poco a poco)
+            iniciarConfetiContinuo();
           });
-        }, 1000);
+        }, 900);
       });
-
-      // En caso de que el navegador bloquee el autoplay, reproducir en primer toque
-      document.body.addEventListener("click", playMusic, { once: true });
 
       // Manejar clic en "Confirmar asistencia"
       confirmBtn.addEventListener("click", () => {
@@ -321,7 +302,11 @@
             const { nombre, personas } = result.value;
 
             // Lanzar confeti al confirmar
-            lanzarConfeti();
+            confetti({
+              particleCount: 100,
+              spread: 80,
+              origin: { y: 0.3 }
+            });
 
             // Mostrar mensaje de agradecimiento
             await Swal.fire({
@@ -338,11 +323,9 @@
                 personas: personas,
                 timestamp: serverTimestamp()
               });
-              // Opcional: puedes mostrar una confirmación silenciosa en consola
               console.log("Confirmación guardada con éxito");
             } catch (error) {
               console.error("Error guardando en Firestore: ", error);
-              // Si ocurre error, notificar al usuario
               Swal.fire({
                 icon: 'error',
                 title: 'Error',
