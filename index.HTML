@@ -1,49 +1,209 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Invitación de Cumpleaños Minimalista</title>
+/* ========================
+   Estilos Generales
+   ======================== */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body,
+html {
+  width: 100%;
+  height: 100%;
+  font-family: 'Baloo 2', cursive;
+  background-color: #f7f5f2;
+  overflow-x: hidden;
+}
 
-  <!-- Google Font: Baloo 2 -->
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet" />
+/* ========================
+   Contenedor Inicial
+   ======================== */
+.initial-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f5f2;
+}
 
-  <!-- SweetAlert2 CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
+.initial-card {
+  background-color: #ffffff;
+  width: 90%;
+  max-width: 380px;
+  height: 88vh;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 24px;
+  text-align: center;
+  color: #333333;
+  opacity: 0;
+  transform: scale(0.8);
+  animation: initialEnter 0.6s forwards ease-out;
+}
 
-  <!-- Hoja de estilos externa -->
-  <link rel="stylesheet" href="styles.css" />
-</head>
-<body>
-  <!-- Pantalla de inicio con sobre animado -->
-  <div class="start-screen" id="startScreen">
-    <div class="envelope" id="envelope"></div>
-    <button class="open-btn" id="openInvitationBtn">Abrir invitación</button>
-  </div>
+.initial-card h1 {
+  font-size: 2rem;
+  margin-bottom: 24px;
+  color: #4a7c59;
+}
 
-  <!-- Contenedor de la invitación (oculto inicialmente) -->
-  <div class="invitation-container" id="invitationContainer">
-    <div class="invitation-card" id="invitationCard">
-      <div class="invitation-content">
-        <div>
-          <h1>🎠 ¡Estás invitado!</h1>
-          <p>
-            Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.<br>
-            Acompáñanos para disfrutar de una jornada inolvidable entre estos hermosos animales.<br>
-            ¡No faltes!
-          </p>
-        </div>
-        <button class="confirm-btn" id="confirmBtn">Confirmar asistencia 🎉</button>
-      </div>
-    </div>
-  </div>
+.open-btn {
+  padding: 12px 20px;
+  background-color: #4a7c59;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+.open-btn:hover {
+  background-color: #3b6747;
+}
 
-  <!-- Scripts externos -->
-  <!-- SweetAlert2 Library -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
-  <!-- Canvas Confetti Library -->
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-  <!-- Script principal -->
-  <script type="module" src="script.js"></script>
-</body>
-</html>
+/* Animación de entrada de la tarjeta inicial */
+@keyframes initialEnter {
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Animación de salida de la tarjeta inicial */
+.initial-card.open {
+  animation: initialExit 0.8s forwards ease-in;
+}
+@keyframes initialExit {
+  to {
+    opacity: 0;
+    transform: scale(0.5) rotate(20deg);
+  }
+}
+
+/* ========================
+   Contenedor de la Invitación Interior
+   ======================== */
+.invitation-container {
+  display: none;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100vh;
+  background-color: #f7f5f2;
+  padding: 12px;
+}
+
+/* Tarjeta de invitación minimalista y dinámica */
+.invitation-card {
+  background-color: #ffffff;
+  width: 95%;
+  max-width: 380px;
+  max-height: 90vh;
+  border-radius: 8px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px;
+  color: #333333;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s ease, transform 0.6s ease;
+  position: relative;
+}
+
+/* Mostrar la tarjeta con animación */
+.invitation-card.show {
+  opacity: 1;
+  transform: translateY(0);
+  animation: floatCard 3s ease-in-out infinite alternate;
+}
+
+/* Animación suave de flotación */
+@keyframes floatCard {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-5px);
+  }
+}
+
+/* Contenido de la tarjeta */
+.invitation-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+}
+
+.invitation-content h1 {
+  font-size: 1.8rem;
+  margin-bottom: 12px;
+  color: #4a7c59;
+}
+
+.invitation-content p {
+  font-size: 1rem;
+  line-height: 1.5;
+  margin-bottom: 16px;
+  color: #555555;
+}
+
+/* Botón de confirmar asistencia */
+.confirm-btn {
+  padding: 12px 20px;
+  background-color: #e07a5f;
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 1rem;
+  cursor: pointer;
+  align-self: center;
+  transition: background-color 0.3s ease;
+}
+.confirm-btn:hover {
+  background-color: #c96850;
+}
+
+/* ========================
+   Ajustes SweetAlert2 para Móvil
+   ======================== */
+.swal2-popup {
+  width: 90% !important;
+  max-width: 320px !important;
+  font-size: 1rem !important;
+}
+.swal2-input {
+  font-size: 1rem !important;
+}
+
+/* ========================
+   Responsivo en pantallas muy pequeñas
+   ======================== */
+@media (max-width: 360px) {
+  .initial-card,
+  .invitation-card {
+    padding: 16px;
+  }
+  .open-btn,
+  .confirm-btn {
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  .initial-card h1 {
+    font-size: 1.7rem;
+  }
+  .invitation-content h1 {
+    font-size: 1.5rem;
+  }
+  .invitation-content p {
+    font-size: 0.95rem;
+  }
+}

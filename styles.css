@@ -1,10 +1,13 @@
-/* Estilos generales */
-* {
+/* ========================
+   Estilos Generales
+   ======================== */
+   * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
   }
-  body, html {
+  body,
+  html {
     width: 100%;
     height: 100%;
     font-family: 'Baloo 2', cursive;
@@ -12,10 +15,11 @@
     overflow-x: hidden;
   }
   
-  /* Contenedor centrado para pantalla de inicio */
-  .start-screen {
+  /* ========================
+     Contenedor Inicial
+     ======================== */
+  .initial-container {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
     width: 100%;
@@ -23,52 +27,38 @@
     background-color: #f7f5f2;
   }
   
-  /* Estilo del sobre */
-  .envelope {
-    position: relative;
-    width: 180px;
-    height: 100px;
+  .initial-card {
     background-color: #ffffff;
-    border: 1.5px solid #cccccc;
-    border-radius: 4px;
-    overflow: hidden;
-    cursor: pointer;
-  }
-  .envelope::before {
-    content: "";
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 180px;
-    height: 50px;
-    background-color: #e0e0e0;
-    clip-path: polygon(0 0, 100% 0, 50% 100%);
-  }
-  
-  /* Animación para abrir/eliminar el sobre */
-  .envelope.open {
-    animation: envelopeOpen 0.9s forwards ease-in;
-  }
-  @keyframes envelopeOpen {
-    0% {
-      transform: scale(1) translateY(0) rotate(0deg);
-      opacity: 1;
-    }
-    100% {
-      transform: scale(0.5) translateY(-180px) rotate(45deg);
-      opacity: 0;
-    }
+    width: 90%;
+    max-width: 380px;
+    height: 88vh;
+    border-radius: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 24px;
+    text-align: center;
+    color: #333333;
+    opacity: 0;
+    transform: scale(0.8);
+    animation: initialEnter 0.6s forwards ease-out;
   }
   
-  /* Botón "Abrir invitación" */
+  .initial-card h1 {
+    font-size: 2rem;
+    margin-bottom: 24px;
+    color: #4a7c59;
+  }
+  
   .open-btn {
-    margin-top: 16px;
-    padding: 8px 16px;
+    padding: 12px 20px;
     background-color: #4a7c59;
     color: #ffffff;
     border: none;
-    border-radius: 4px;
-    font-size: 0.95rem;
+    border-radius: 6px;
+    font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s ease;
   }
@@ -76,7 +66,28 @@
     background-color: #3b6747;
   }
   
-  /* Contenedor de la invitación (oculto inicialmente) */
+  /* Animación de entrada de la tarjeta inicial */
+  @keyframes initialEnter {
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Animación de salida de la tarjeta inicial */
+  .initial-card.open {
+    animation: initialExit 0.8s forwards ease-in;
+  }
+  @keyframes initialExit {
+    to {
+      opacity: 0;
+      transform: scale(0.5) rotate(20deg);
+    }
+  }
+  
+  /* ========================
+     Contenedor de la Invitación Interior
+     ======================== */
   .invitation-container {
     display: none;
     justify-content: center;
@@ -84,32 +95,43 @@
     width: 100%;
     height: 100vh;
     background-color: #f7f5f2;
-    padding: 16px;
+    padding: 12px;
   }
   
-  /* Tarjeta de invitación minimalista */
+  /* Tarjeta de invitación minimalista y dinámica */
   .invitation-card {
     background-color: #ffffff;
-    max-width: 360px;
-    width: 90%;
-    height: 85vh;
+    width: 95%;
+    max-width: 380px;
+    max-height: 90vh;
     border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-    position: relative;
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.6s ease, transform 0.6s ease;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 24px;
+    padding: 20px;
     color: #333333;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+    position: relative;
   }
   
   /* Mostrar la tarjeta con animación */
   .invitation-card.show {
     opacity: 1;
     transform: translateY(0);
+    animation: floatCard 3s ease-in-out infinite alternate;
+  }
+  
+  /* Animación suave de flotación */
+  @keyframes floatCard {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(-5px);
+    }
   }
   
   /* Contenido de la tarjeta */
@@ -118,30 +140,29 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-  }
-  .invitation-content h1 {
-    font-size: 1.9rem;
     text-align: center;
+  }
+  
+  .invitation-content h1 {
+    font-size: 1.8rem;
     margin-bottom: 12px;
     color: #4a7c59;
   }
+  
   .invitation-content p {
     font-size: 1rem;
     line-height: 1.5;
-    text-align: center;
-    flex-grow: 1;
-    margin-top: 8px;
     margin-bottom: 16px;
     color: #555555;
   }
   
-  /* Botón de confirmar asistencia dentro de la carta */
+  /* Botón de confirmar asistencia */
   .confirm-btn {
-    padding: 10px 16px;
+    padding: 12px 20px;
     background-color: #e07a5f;
     color: #ffffff;
     border: none;
-    border-radius: 4px;
+    border-radius: 6px;
     font-size: 1rem;
     cursor: pointer;
     align-self: center;
@@ -151,14 +172,39 @@
     background-color: #c96850;
   }
   
-  /* Ajuste en pantallas muy pequeñas */
+  /* ========================
+     Ajustes SweetAlert2 para Móvil
+     ======================== */
+  .swal2-popup {
+    width: 90% !important;
+    max-width: 320px !important;
+    font-size: 1rem !important;
+  }
+  .swal2-input {
+    font-size: 1rem !important;
+  }
+  
+  /* ========================
+     Responsivo en pantallas muy pequeñas
+     ======================== */
   @media (max-width: 360px) {
-    .open-btn, .confirm-btn {
+    .initial-card,
+    .invitation-card {
+      padding: 16px;
+    }
+    .open-btn,
+    .confirm-btn {
       width: 100%;
       font-size: 0.9rem;
     }
-    .invitation-card {
-      padding: 16px;
+    .initial-card h1 {
+      font-size: 1.7rem;
+    }
+    .invitation-content h1 {
+      font-size: 1.5rem;
+    }
+    .invitation-content p {
+      font-size: 0.95rem;
     }
   }
   
