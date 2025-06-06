@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Invitación de Cumpleaños</title>
+
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <!-- Estilos -->
+  <style>
+    body {
+      font-family: 'Baloo 2', cursive;
+      margin: 0;
+      background: url('https://images.unsplash.com/photo-1601918774946-196d02d78102?fit=crop&w=900&q=80') no-repeat center center;
+      background-size: cover;
+      height: 100vh;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .carta {
+      background: rgba(255, 255, 255, 0.9);
+      width: 90%;
+      max-width: 400px;
+      height: 90vh;
+      border-radius: 24px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+      padding: 30px 20px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      text-align: center;
+      z-index: 2;
+    }
+
+    h1 {
+      font-size: 2em;
+      color: #8B4513;
+      margin-bottom: 10px;
+    }
+
+    p {
+      font-size: 1.2em;
+      color: #333;
+      margin: 10px 0;
+      flex-grow: 1;
+    }
+
+    button {
+      background-color: #a0522d;
+      color: white;
+      padding: 15px;
+      border: none;
+      border-radius: 12px;
+      font-size: 1.1em;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    button:hover {
+      background-color: #804000;
+    }
+
+    audio {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      z-index: 99;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Música -->
+  <audio autoplay loop controls>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    Tu navegador no soporta el audio.
+  </audio>
+
+  <!-- Tarjeta -->
+  <div class="carta">
+    <div>
+      <h1>🎠 ¡Estás invitado!</h1>
+      <p>Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.</p>
+      <p>Será un día inolvidable con pastel, música y amigos. 🐴🎂</p>
+      <p>Confirma tu asistencia abajo. ¡Te esperamos!</p>
+    </div>
+    <button onclick="confirmarAsistencia()">Confirmar asistencia 🎉</button>
+  </div>
+
+  <script>
+    // Confeti inicial
+    function explotarConfetiInicial() {
+      for (let i = 0; i < 4; i++) {
+        confetti({
+          particleCount: 150,
+          spread: 100,
+          origin: { y: 0.6 }
+        });
+      }
+    }
+
+    // Lluvia de confeti
+    function iniciarLluviaConfeti() {
+      const duration = 25000;
+      const end = Date.now() + duration;
+
+      (function frame() {
+        confetti({
+          particleCount: 2,
+          angle: 90,
+          spread: 60,
+          origin: { x: Math.random(), y: 0 },
+          colors: ['#ffb347', '#a0522d', '#ffffff']
+        });
+        if (Date.now() < end) {
+          requestAnimationFrame(frame);
+        }
+      })();
+    }
+
+    // Ejecutar al cargar
+    window.onload = () => {
+      setTimeout(() => {
+        explotarConfetiInicial();
+        iniciarLluviaConfeti();
+      }, 500);
+    };
+
+    // Enviar confirmación
+    function confirmarAsistencia() {
+      Swal.fire({
+        title: 'Confirmar asistencia',
+        html:
+          '<input id="nombre" class="swal2-input" placeholder="Tu nombre">' +
+          '<input id="personas" type="number" class="swal2-input" placeholder="¿Cuántas personas asistirán?">',
+        confirmButtonText: 'Enviar',
+        showCancelButton: true,
+        cancelButtonText: 'Cancelar',
+        preConfirm: () => {
+          const nombre = document.getElementById('nombre').value;
+          const personas = document.getElementById('personas').value;
+          if (!nombre || !personas) {
+            Swal.showValidationMessage('Por favor completa todos los campos');
+          }
+          return { nombre, personas };
+        }
+      }).then((result) => {
+        if (result.isConfirmed) {
+          lanzarConfetti();
+          enviarAGoogleSheets(result.value.nombre, result.value.personas);
+          Swal.fire(
+            '¡Gracias!',
+            `Gracias, ${result.value.nombre}. ¡Te esperamos con ${result.value.personas} persona(s)! 🎊`,
+            'success'
+          );
+        }
+      });
+    }
+
+    // Confeti en confirmación
+    function lanzarConfetti() {
+      confetti({
+        particleCount: 120,
+        spread: 80,
+        origin: { y: 0.6 }
+      });
+    }
+
+    // Envío a Google Sheets
+    function enviarAGoogleSheets(nombre, personas) {
+      const scriptURL = 'https://SCRIPT-DE-GOOGLE-HERE'; // REEMPLAZAR POR TU URL
+
+      fetch(scriptURL, {
+        method: 'POST',
+        body: JSON.stringify({ nombre: nombre, personas: personas }),
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }).then(response => {
+        console.log("Enviado a Google Sheets");
+      }).catch(error => {
+        console.error('Error al enviar:', error);
+      });
+    }
+  </script>
+
+</body>
+</html>
