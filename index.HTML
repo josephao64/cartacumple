@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Invitación Spirit – Raquel 2 años</title>
 
-  <!-- GSAP para animaciones si las necesitas -->
+  <!-- GSAP para animaciones -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 
   <style>
@@ -17,6 +17,7 @@
       padding: 0;
       overflow: hidden;
       font-family: 'Grandstander', cursive;
+      height: 100%;
       background: #d1d8c0;
       background-image:
         linear-gradient(
@@ -42,7 +43,6 @@
           #e8e9de 90%
         );
       background-size: 100% 10%;
-      height: 100vh;
       text-align: center;
       color: #5c5c5c;
     }
@@ -105,50 +105,61 @@
       color: black;
     }
 
-    /* Tarjeta: usa la imagen como fondo completo */
+    /* Tarjeta más grande para acomodar texto dentro del círculo */
     .card {
       position: relative;
-      width: 420px;
-      height: 600px; /* Ajusta si tu imagen tiene otra proporción */
-      background: url('invitacion-base.png') no-repeat center center;
+      width: 500px;
+      height: 750px;
+      background: url('invitacion-base.png') no-repeat center top;
       background-size: cover;
       display: none;
-      border-radius: 10px;
+      border-radius: 12px;
       box-shadow: 0 0 20px rgba(0,0,0,0.2);
       z-index: 1;
     }
 
-    /* Texto dentro de la tarjeta */
+    /* Texto principal envuelto en spans para animar letras */
     .texto-principal {
       position: absolute;
-      top: 100px;            /* Ajusta según posición del círculo */
+      top: 60px;            
       left: 50%;
       transform: translateX(-50%);
-      width: 320px;
+      width: 360px;
       text-align: center;
       z-index: 2;
       color: #c24a4a;
-      font-size: 2.4em;
-      line-height: 1.1em;
+      font-size: 2.6em;
+      line-height: 1em;
+      font-family: 'Grandstander', cursive;
     }
+    .texto-principal span {
+      display: inline-block;
+      opacity: 0;
+    }
+
+    /* "cumple 2 años!" */
     .texto-secundario {
       position: absolute;
-      top: 150px;           /* Debajo del título principal */
+      top: 130px;           
       left: 50%;
       transform: translateX(-50%);
-      width: 320px;
+      width: 360px;
       text-align: center;
       z-index: 2;
       color: #5c5c5c;
       font-family: 'Little Flowers', cursive;
-      font-size: 1.2em;
+      font-size: 1.3em;
       line-height: 1.2em;
     }
+    .texto-secundario span {
+      display: inline-block;
+      opacity: 0;
+    }
 
-    /* Detalles del evento */
+    /* Detalles del evento dentro del círculo */
     .details {
       position: absolute;
-      top: 280px;           /* Ajusta para que encaje dentro del círculo */
+      top: 200px;          
       left: 50%;
       transform: translateX(-50%);
       width: 360px;
@@ -157,6 +168,7 @@
       font-family: 'Little Flowers', cursive;
       font-size: 1em;
       color: #5c5c5c;
+      opacity: 0;
     }
     .details span {
       display: block;
@@ -170,18 +182,19 @@
     /* Formulario de confirmación */
     form {
       position: absolute;
-      top: 420px;           /* Ajusta según espacio debajo del círculo */
+      top: 450px;          
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
       width: 80%;
-      max-width: 320px;
+      max-width: 360px;
       display: flex;
       flex-direction: column;
       gap: 15px;
       background: rgba(255,255,255,0.85);
       padding: 15px;
       border-radius: 10px;
+      opacity: 0;
     }
     input, button {
       padding: 10px;
@@ -206,7 +219,7 @@
     /* Mensaje de confirmación */
     #mensaje-confirmacion {
       position: absolute;
-      top: 500px;           /* Ajusta debajo del formulario */
+      top: 530px;          
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
@@ -236,13 +249,13 @@
 
     <!-- Tarjeta con fondo de la imagen enviada -->
     <div class="card" id="card">
-      <!-- Título principal dentro del círculo -->
-      <div class="texto-principal">Raquel</div>
-      <!-- "cumple 2 años!" debajo del título -->
-      <div class="texto-secundario">cumple 2 años!</div>
+      <!-- "Raquel" animado letra por letra -->
+      <div class="texto-principal animar-letras">Raquel</div>
+      <!-- "cumple 2 años!" animado -->
+      <div class="texto-secundario animar-letras">cumple 2 años!</div>
 
-      <!-- Detalles (dentro del círculo) -->
-      <div class="details">
+      <!-- Detalles del evento -->
+      <div class="details" id="details">
         <span><strong>Casa Jardín Dominga</strong></span>
         <span><strong>22 de junio, desde las 3:00 PM</strong></span>
         <span><strong>Confirma antes del 19 de junio</strong></span>
@@ -268,6 +281,8 @@
     const envelope = document.getElementById("envelope");
     const card = document.getElementById("card");
     const musica = document.getElementById("musica");
+    const details = document.getElementById("details");
+    const form = document.getElementById("rsvp-form");
 
     envelope.addEventListener("click", () => {
       // Animación del sobre desapareciendo
@@ -279,10 +294,13 @@
           envelope.style.display = "none";
           card.style.display = "block";
 
-          // Animación de aparición de la tarjeta
+          // Preparar animación de letras
+          prepararAnimacionDeLetras();
+
+          // Mostrar tarjeta
           gsap.fromTo(card, 
             { scale: 0.8, opacity: 0 }, 
-            { duration: 1, scale: 1, opacity: 1, ease: "back.out(1.7)" }
+            { duration: 1, scale: 1, opacity: 1, ease: "back.out(1.7)", onComplete: animarContenido }
           );
         }
       });
@@ -294,14 +312,44 @@
       startConfetti();
     });
 
+    // Envuelve cada letra en un span para animarlas
+    function prepararAnimacionDeLetras() {
+      const elems = card.querySelectorAll(".animar-letras");
+      elems.forEach(el => {
+        const text = el.textContent;
+        el.innerHTML = "";
+        text.split("").forEach(char => {
+          const span = document.createElement("span");
+          span.textContent = char;
+          el.appendChild(span);
+        });
+      });
+    }
+
+    // Una vez que la tarjeta aparece, animamos letras, detalles y formulario
+    function animarContenido() {
+      // Animar título y subtítulo
+      const allSpans = card.querySelectorAll(".animar-letras span");
+      gsap.fromTo(allSpans, 
+        { opacity: 0, y: 20 }, 
+        { opacity: 1, y: 0, stagger: 0.05, duration: 0.6, ease: "back.out(1.5)" }
+      );
+
+      // Mostrar detalles después de las letras
+      gsap.to(details, { opacity: 1, delay: 1.2, duration: 0.8 });
+
+      // Mostrar formulario después de detalles
+      gsap.to(form, { opacity: 1, delay: 1.8, duration: 0.8 });
+    }
+
     // Manejo del formulario
-    document.getElementById("rsvp-form").addEventListener("submit", function (e) {
+    form.addEventListener("submit", function (e) {
       e.preventDefault();
-      this.style.display = "none";
+      form.style.display = "none";
       document.getElementById("mensaje-confirmacion").style.display = "block";
     });
 
-    // ======= Código del confeti =======
+    // ======= Código del confeti marrón/dorado =======
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -353,8 +401,7 @@
       }
       drawParticles();
     }
-    // ================================
-
+    // ================================================
   </script>
 </body>
 </html>
