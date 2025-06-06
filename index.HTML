@@ -201,21 +201,22 @@
       background: #f0c420;
     }
 
-    /* Formulario de confirmación (oculto hasta hacer clic en el botón) */
+    /* Formulario de confirmación centrado (por encima del botón) */
     form {
       position: absolute;
-      top: 690px; /* Justo debajo del botón */
+      top: 50%; /* Casi al centro vertical */
       left: 50%;
-      transform: translateX(-50%);
-      z-index: 2;
+      transform: translate(-50%, -50%);
+      z-index: 4; /* Encima de todo */
       width: 80%;
       max-width: 360px;
       display: none;
       flex-direction: column;
       gap: 15px;
-      background: rgba(255,255,255,0.85);
+      background: rgba(255,255,255,0.95);
       padding: 15px;
       border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
     input, button {
       padding: 10px;
@@ -240,7 +241,7 @@
     /* Mensaje de confirmación */
     #mensaje-confirmacion {
       position: absolute;
-      top: 730px; /* Debajo del formulario */
+      top: 730px; /* Debajo del botón/formulario si se muestra */
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
@@ -283,15 +284,17 @@
         <span>+502 4289-2535</span>
       </div>
 
-      <!-- Botón que muestra el formulario -->
-      <button id="btn-mostrar-form">Confirmar asistencia</button>
-
-      <!-- Formulario de confirmación -->
+      <!-- Formulario de confirmación (aparecerá en el centro) -->
       <form id="rsvp-form">
         <input type="text" name="nombre" placeholder="Tu nombre" required />
         <input type="tel" name="telefono" placeholder="Tu teléfono" required />
         <button type="submit">Enviar</button>
       </form>
+
+      <!-- Botón que muestra el formulario -->
+      <button id="btn-mostrar-form">Confirmar asistencia</button>
+
+      <!-- Mensaje de confirmación -->
       <div id="mensaje-confirmacion">¡Gracias por confirmar! 🎉</div>
     </div>
   </div>
@@ -367,9 +370,8 @@
       gsap.to(btnMostrarForm, { opacity: 1, delay: 1.8, duration: 0.8 });
     }
 
-    // Al hacer clic en el botón "Confirmar asistencia", ocultar botón y mostrar inputs
+    // Al hacer clic en el botón "Confirmar asistencia", mostrar inputs centrados
     btnMostrarForm.addEventListener("click", () => {
-      btnMostrarForm.style.display = "none";
       gsap.to(form, { display: "flex", opacity: 1, duration: 0.8 });
     });
 
