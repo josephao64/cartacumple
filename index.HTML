@@ -3,18 +3,19 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>¡Cumple de Raquel!</title>
+  <title>Invitación Años 20</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Chewy&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');
 
     html, body {
       margin: 0;
       padding: 0;
       overflow: hidden;
-      font-family: 'Chewy', cursive;
+      font-family: 'Great Vibes', cursive;
+      background: #fdf6ec;
+      color: #111;
       height: 100%;
-      background: #000;
     }
 
     canvas {
@@ -37,15 +38,16 @@
     }
 
     .envelope {
-      width: 200px;
+      width: 180px;
       height: 120px;
-      background: #c19a6b;
+      background: #d4af37;
       position: relative;
       cursor: pointer;
-      box-shadow: 0 0 20px #8b5e3c;
+      box-shadow: 0 0 20px #b38b00;
       display: flex;
       align-items: center;
       justify-content: center;
+      transform: rotate(-1deg);
     }
 
     .envelope::before,
@@ -60,66 +62,55 @@
     .envelope::before {
       top: 0;
       left: 0;
-      border-width: 0 100px 60px 100px;
-      border-color: transparent transparent #fff transparent;
+      border-width: 0 90px 60px 90px;
+      border-color: transparent transparent #fdf6ec transparent;
     }
 
     .envelope::after {
       bottom: 0;
       left: 0;
-      border-width: 60px 100px 0 100px;
-      border-color: #fff transparent transparent transparent;
+      border-width: 60px 90px 0 90px;
+      border-color: #fdf6ec transparent transparent transparent;
     }
 
     .envelope span {
       font-size: 1.2em;
       z-index: 1;
-      color: #5c3d1a;
+      color: black;
     }
 
     .card {
-      width: 100%;
-      height: 100vh;
-      background: url('fondo-invitacion.png') no-repeat center center;
-      background-size: cover;
-      display: none;
-      position: relative;
-      color: #5c3d1a;
-    }
-
-    .card .content {
-      position: absolute;
-      top: 10%;
-      left: 50%;
-      transform: translateX(-50%);
-      width: 80%;
+      border: 4px double gold;
+      padding: 40px;
+      border-radius: 20px;
       max-width: 600px;
-      background: rgba(255, 255, 255, 0.8);
-      padding: 20px;
-      border-radius: 15px;
+      background: rgba(255, 255, 255, 0.95);
+      box-shadow: 0 0 20px gold;
+      display: none;
+      color: #111;
     }
 
     h1 {
-      font-size: 2.5em;
+      font-size: 3em;
       margin-bottom: 10px;
     }
 
     p {
-      font-size: 1.2em;
-      margin-bottom: 20px;
+      font-size: 1.3em;
+      margin-bottom: 30px;
     }
 
     form {
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      margin-top: 10px;
+      gap: 15px;
+      margin-top: 20px;
     }
 
     input, button {
       padding: 10px;
       font-size: 1em;
-      border-radius: 8px;
+      border-radius: 5px;
       border: none;
     }
 
@@ -129,7 +120,7 @@
     }
 
     button {
-      background: #d4af37;
+      background: gold;
       color: black;
       cursor: pointer;
       transition: background 0.3s ease;
@@ -145,7 +136,7 @@
   </style>
 </head>
 <body>
-  <!-- Confeti -->
+  <!-- Confeti en canvas -->
   <canvas id="confetti"></canvas>
 
   <div class="container">
@@ -156,30 +147,24 @@
 
     <!-- Tarjeta -->
     <div class="card" id="card">
-      <div class="content">
-        <h1>¡Raquel cumple 2 años!</h1>
-        <p>Te esperamos para celebrarlo con mucha alegría 🎉</p>
-        <p><strong>📍 Casa Jardín Dominga</strong><br>
-           <strong>📅 22 de junio, desde las 3:00 PM</strong></p>
-        <p><strong>Confirma antes del 19 de junio</strong><br>
-           al <a href="tel:+50242892535">+502 4289-2535</a></p>
+      <h1>¡Estás Invitado!</h1>
+      <p>Ven a celebrar los 50 al estilo Charleston 🥂<br> Sábado 22 de junio · 8:00 PM</p>
 
-        <form id="rsvp-form">
-          <input type="text" name="nombre" placeholder="Tu nombre" required />
-          <input type="tel" name="telefono" placeholder="Tu teléfono" required />
-          <button type="submit">Confirmar asistencia</button>
-        </form>
-
-        <p id="mensaje-confirmacion" style="display:none; margin-top:15px;">¡Gracias por confirmar! 🐎🌸</p>
-      </div>
+      <form id="rsvp-form">
+        <input type="text" name="nombre" placeholder="Tu nombre" required />
+        <input type="tel" name="telefono" placeholder="Tu teléfono" required />
+        <button type="submit">Confirmar asistencia</button>
+      </form>
+      <p id="mensaje-confirmacion" style="display:none; margin-top:20px;">¡Gracias por confirmar! 💃🕺</p>
     </div>
   </div>
 
   <audio id="musica" autoplay loop>
-    <source src="https://cdn.pixabay.com/download/audio/2022/03/14/audio_4a264e0f77.mp3" type="audio/mpeg" />
+    <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mpeg" />
   </audio>
 
   <script>
+    // Animación de sobre y tarjeta
     const envelope = document.getElementById("envelope");
     const card = document.getElementById("card");
     const musica = document.getElementById("musica");
@@ -192,7 +177,7 @@
         onComplete: () => {
           envelope.style.display = "none";
           card.style.display = "block";
-          gsap.fromTo(card, { scale: 0.9, opacity: 0 }, {
+          gsap.fromTo(card, { scale: 0.5, opacity: 0 }, {
             duration: 1,
             scale: 1,
             opacity: 1,
@@ -202,6 +187,8 @@
       });
 
       if (musica.paused) musica.play();
+
+      // activar confeti
       startConfetti();
     });
 
@@ -211,7 +198,7 @@
       document.getElementById("mensaje-confirmacion").style.display = "block";
     });
 
-    // Confeti
+    // Confeti marrón/dorado
     const canvas = document.getElementById("confetti");
     const ctx = canvas.getContext("2d");
     let particles = [];
@@ -225,7 +212,7 @@
     resizeCanvas();
 
     function createParticle() {
-      const colors = ["#d4af37", "#c19a6b", "#8b5e3c"];
+      const colors = ["#a67c52", "#d4af37", "#8b5e3c"];
       return {
         x: Math.random() * canvas.width,
         y: -20,
