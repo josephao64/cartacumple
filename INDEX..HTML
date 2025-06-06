@@ -7,40 +7,72 @@
 
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
-
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <!-- Canvas Confetti -->
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
 
-  <!-- Estilos -->
   <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
     body {
       font-family: 'Baloo 2', cursive;
-      margin: 0;
-      background: url('https://images.unsplash.com/photo-1601918774946-196d02d78102?fit=crop&w=900&q=80') no-repeat center center;
-      background-size: cover;
+      background: #fff8f0;
       height: 100vh;
       overflow: hidden;
       display: flex;
       justify-content: center;
       align-items: center;
+      position: relative;
+    }
+
+    /* Pantalla de sobre */
+    .pantalla-sobre {
+      position: absolute;
+      z-index: 10;
+      background-color: #fff8f0;
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      transition: opacity 1s ease, transform 1s ease;
+    }
+
+    .sobre-img {
+      width: 180px;
+      margin-bottom: 20px;
+    }
+
+    .btn-abrir {
+      background-color: #a0522d;
+      color: white;
+      font-size: 1.2em;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-abrir:hover {
+      background-color: #804000;
     }
 
     .carta {
-      background: rgba(255, 255, 255, 0.9);
+      display: none;
+      background: rgba(255, 255, 255, 0.95);
       width: 90%;
       max-width: 400px;
       height: 90vh;
       border-radius: 24px;
       box-shadow: 0 8px 20px rgba(0,0,0,0.2);
       padding: 30px 20px;
-      display: flex;
       flex-direction: column;
       justify-content: space-between;
       text-align: center;
       z-index: 2;
+      position: relative;
+      animation: fadeIn 1s forwards;
     }
 
     h1 {
@@ -53,10 +85,9 @@
       font-size: 1.2em;
       color: #333;
       margin: 10px 0;
-      flex-grow: 1;
     }
 
-    button {
+    button.confirmar {
       background-color: #a0522d;
       color: white;
       padding: 15px;
@@ -67,77 +98,108 @@
       transition: background-color 0.3s ease;
     }
 
-    button:hover {
+    button.confirmar:hover {
       background-color: #804000;
     }
 
     audio {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      z-index: 99;
+      display: none;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.8); }
+      to { opacity: 1; transform: scale(1); }
     }
   </style>
 </head>
 <body>
 
+  <!-- Pantalla inicial con sobre -->
+  <div class="pantalla-sobre" id="pantallaSobre">
+    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="sobre-img" alt="Sobre">
+    <button class="btn-abrir" onclick="abrirInvitacion()">Abrir invitación</button>
+  </div>
+
   <!-- Música -->
-  <audio autoplay loop controls>
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
-    Tu navegador no soporta el audio.
+  <audio id="musicaFondo" loop>
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c948e1a72d.mp3" type="audio/mp3">
+    Tu navegador no soporta audio.
   </audio>
 
-  <!-- Tarjeta -->
-  <div class="carta">
+  <!-- Tarjeta de cumpleaños -->
+  <div class="carta" id="cartaInvitacion">
     <div>
       <h1>🎠 ¡Estás invitado!</h1>
       <p>Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.</p>
       <p>Será un día inolvidable con pastel, música y amigos. 🐴🎂</p>
       <p>Confirma tu asistencia abajo. ¡Te esperamos!</p>
     </div>
-    <button onclick="confirmarAsistencia()">Confirmar asistencia 🎉</button>
+    <button class="confirmar" onclick="confirmarAsistencia()">Confirmar asistencia 🎉</button>
   </div>
 
+  <!-- Firebase + Firestore -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDsBilZaGjEyO-ZqEXFowXrjFT-794TPlE",
+      authDomain: "carta-cumple.firebaseapp.com",
+      projectId: "carta-cumple",
+      storageBucket: "carta-cumple.firebasestorage.app",
+      messagingSenderId: "431208595093",
+      appId: "1:431208595093:web:88cc6628ab14ed8835659c"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    // Guardar confirmación
+    window.guardarConfirmacion = async (nombre, personas) => {
+      try {
+        await addDoc(collection(db, "confirmaciones"), {
+          nombre: nombre,
+          personas: parseInt(personas),
+          timestamp: serverTimestamp()
+        });
+        console.log("✅ Confirmación guardada en Firestore.");
+      } catch (e) {
+        console.error("❌ Error al guardar en Firestore: ", e);
+      }
+    };
+  </script>
+
+  <!-- Funcionalidad principal -->
   <script>
-    // Confeti inicial
-    function explotarConfetiInicial() {
-      for (let i = 0; i < 4; i++) {
+    function abrirInvitacion() {
+      const pantalla = document.getElementById("pantallaSobre");
+      const carta = document.getElementById("cartaInvitacion");
+      const musica = document.getElementById("musicaFondo");
+
+      // Ocultar sobre con animación
+      pantalla.style.opacity = 0;
+      pantalla.style.transform = "scale(0.9)";
+      setTimeout(() => {
+        pantalla.style.display = "none";
+        carta.style.display = "flex";
+        carta.style.animation = "fadeIn 1s";
+        lanzarConfeti();
+        musica.play().catch(() => {
+          console.warn("🎵 Autoplay bloqueado");
+        });
+      }, 700);
+    }
+
+    function lanzarConfeti() {
+      for (let i = 0; i < 3; i++) {
         confetti({
-          particleCount: 150,
+          particleCount: 200,
           spread: 100,
           origin: { y: 0.6 }
         });
       }
     }
 
-    // Lluvia de confeti
-    function iniciarLluviaConfeti() {
-      const duration = 25000;
-      const end = Date.now() + duration;
-
-      (function frame() {
-        confetti({
-          particleCount: 2,
-          angle: 90,
-          spread: 60,
-          origin: { x: Math.random(), y: 0 },
-          colors: ['#ffb347', '#a0522d', '#ffffff']
-        });
-        if (Date.now() < end) {
-          requestAnimationFrame(frame);
-        }
-      })();
-    }
-
-    // Ejecutar al cargar
-    window.onload = () => {
-      setTimeout(() => {
-        explotarConfetiInicial();
-        iniciarLluviaConfeti();
-      }, 500);
-    };
-
-    // Enviar confirmación
     function confirmarAsistencia() {
       Swal.fire({
         title: 'Confirmar asistencia',
@@ -157,40 +219,14 @@
         }
       }).then((result) => {
         if (result.isConfirmed) {
-          lanzarConfetti();
-          enviarAGoogleSheets(result.value.nombre, result.value.personas);
+          confetti();
+          guardarConfirmacion(result.value.nombre, result.value.personas);
           Swal.fire(
             '¡Gracias!',
             `Gracias, ${result.value.nombre}. ¡Te esperamos con ${result.value.personas} persona(s)! 🎊`,
             'success'
           );
         }
-      });
-    }
-
-    // Confeti en confirmación
-    function lanzarConfetti() {
-      confetti({
-        particleCount: 120,
-        spread: 80,
-        origin: { y: 0.6 }
-      });
-    }
-
-    // Envío a Google Sheets
-    function enviarAGoogleSheets(nombre, personas) {
-      const scriptURL = 'https://SCRIPT-DE-GOOGLE-HERE'; // REEMPLAZAR POR TU URL
-
-      fetch(scriptURL, {
-        method: 'POST',
-        body: JSON.stringify({ nombre: nombre, personas: personas }),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }).then(response => {
-        console.log("Enviado a Google Sheets");
-      }).catch(error => {
-        console.error('Error al enviar:', error);
       });
     }
   </script>
