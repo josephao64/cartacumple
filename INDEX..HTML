@@ -2,234 +2,357 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invitación de Cumpleaños</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Invitación de Cumpleaños con Caballos</title>
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Baloo+2&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <!-- Google Font: Baloo 2 -->
+  <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@400;700&display=swap" rel="stylesheet" />
+
+  <!-- SweetAlert2 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet" />
 
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-
-    body {
-      font-family: 'Baloo 2', cursive;
-      background: #fff8f0;
-      height: 100vh;
-      overflow: hidden;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      position: relative;
+    /* Estilos generales */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
     }
-
-    /* Pantalla de sobre */
-    .pantalla-sobre {
-      position: absolute;
-      z-index: 10;
-      background-color: #fff8f0;
+    body, html {
       width: 100%;
       height: 100%;
+      font-family: 'Baloo 2', cursive;
+      background-color: #f0ece3;
+      overflow-x: hidden;
+    }
+    /* Contenedor centrado para pantalla de inicio */
+    .start-screen {
       display: flex;
       flex-direction: column;
-      align-items: center;
       justify-content: center;
-      transition: opacity 1s ease, transform 1s ease;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      background-color: #f0ece3;
     }
-
-    .sobre-img {
-      width: 180px;
-      margin-bottom: 20px;
+    /* Estilo del sobre */
+    .envelope {
+      position: relative;
+      width: 200px;
+      height: 120px;
+      background-color: #fff;
+      border: 2px solid #ccc;
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: pointer;
     }
-
-    .btn-abrir {
-      background-color: #a0522d;
-      color: white;
-      font-size: 1.2em;
-      padding: 12px 24px;
+    /* Pala del sobre (triángulo) */
+    .envelope::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 200px;
+      height: 60px;
+      background-color: #ccc;
+      clip-path: polygon(0 0, 100% 0, 50% 100%);
+    }
+    /* Animación para abrir/eliminar el sobre */
+    .envelope.open {
+      animation: envelopeOpen 1s forwards ease-in;
+    }
+    @keyframes envelopeOpen {
+      0% {
+        transform: scale(1) translateY(0) rotate(0deg);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(0.5) translateY(-200px) rotate(45deg);
+        opacity: 0;
+      }
+    }
+    /* Botón "Abrir invitación" */
+    .open-btn {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background-color: #6b8e23;
+      color: #fff;
       border: none;
-      border-radius: 12px;
+      border-radius: 5px;
+      font-size: 1rem;
       cursor: pointer;
       transition: background-color 0.3s ease;
     }
-
-    .btn-abrir:hover {
-      background-color: #804000;
+    .open-btn:hover {
+      background-color: #5a7a1f;
     }
-
-    .carta {
+    /* Contenedor de la invitación (oculto inicialmente) */
+    .invitation-container {
       display: none;
-      background: rgba(255, 255, 255, 0.95);
-      width: 90%;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100vh;
+      background-color: #eae1d0;
+      padding: 20px;
+    }
+    /* Tarjeta de invitación */
+    .invitation-card {
+      background-color: #fff;
+      background-image: url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=400&q=80');
+      background-size: cover;
+      background-position: center;
       max-width: 400px;
+      width: 90%;
       height: 90vh;
-      border-radius: 24px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-      padding: 30px 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+      position: relative;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+      display: flex;
       flex-direction: column;
       justify-content: space-between;
-      text-align: center;
-      z-index: 2;
-      position: relative;
-      animation: fadeIn 1s forwards;
+      padding: 20px;
+      color: #333;
     }
-
-    h1 {
-      font-size: 2em;
-      color: #8B4513;
+    /* Mostrar la tarjeta con animación */
+    .invitation-card.show {
+      opacity: 1;
+      transform: scale(1);
+    }
+    /* Superposición semitransparente para legibilidad del texto */
+    .invitation-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.85);
+      border-radius: 15px;
+      z-index: 1;
+    }
+    /* Contenido de la tarjeta (por encima de la superposición) */
+    .invitation-content {
+      position: relative;
+      z-index: 2;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .invitation-content h1 {
+      font-size: 2rem;
+      text-align: center;
       margin-bottom: 10px;
     }
-
-    p {
-      font-size: 1.2em;
-      color: #333;
-      margin: 10px 0;
+    .invitation-content p {
+      font-size: 1.1rem;
+      line-height: 1.4;
     }
-
-    button.confirmar {
-      background-color: #a0522d;
-      color: white;
-      padding: 15px;
+    /* Botón de confirmar asistencia en la tarjeta */
+    .confirm-btn {
+      padding: 10px 20px;
+      background-color: #ff69b4;
+      color: #fff;
       border: none;
-      border-radius: 12px;
-      font-size: 1.1em;
+      border-radius: 5px;
+      font-size: 1rem;
       cursor: pointer;
+      align-self: center;
+      margin-top: 20px;
       transition: background-color 0.3s ease;
     }
-
-    button.confirmar:hover {
-      background-color: #804000;
+    .confirm-btn:hover {
+      background-color: #e55a9b;
     }
-
-    audio {
-      display: none;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: scale(0.8); }
-      to { opacity: 1; transform: scale(1); }
+    /* Ajuste en pantallas muy pequeñas */
+    @media (max-width: 360px) {
+      .open-btn, .confirm-btn {
+        width: 100%;
+        font-size: 0.9rem;
+      }
     }
   </style>
 </head>
 <body>
-
-  <!-- Pantalla inicial con sobre -->
-  <div class="pantalla-sobre" id="pantallaSobre">
-    <img src="https://cdn-icons-png.flaticon.com/512/561/561127.png" class="sobre-img" alt="Sobre">
-    <button class="btn-abrir" onclick="abrirInvitacion()">Abrir invitación</button>
+  <!-- Pantalla de inicio con sobre animado -->
+  <div class="start-screen" id="startScreen">
+    <div class="envelope" id="envelope"></div>
+    <button class="open-btn" id="openInvitationBtn">Abrir invitación</button>
   </div>
 
-  <!-- Música -->
-  <audio id="musicaFondo" loop>
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_c948e1a72d.mp3" type="audio/mp3">
-    Tu navegador no soporta audio.
-  </audio>
-
-  <!-- Tarjeta de cumpleaños -->
-  <div class="carta" id="cartaInvitacion">
-    <div>
-      <h1>🎠 ¡Estás invitado!</h1>
-      <p>Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.</p>
-      <p>Será un día inolvidable con pastel, música y amigos. 🐴🎂</p>
-      <p>Confirma tu asistencia abajo. ¡Te esperamos!</p>
+  <!-- Contenedor de la invitación (oculto inicialmente) -->
+  <div class="invitation-container" id="invitationContainer">
+    <div class="invitation-card" id="invitationCard">
+      <!-- Superposición semitransparente para que el texto sea legible -->
+      <div class="invitation-overlay"></div>
+      <!-- Contenido real de la invitación -->
+      <div class="invitation-content">
+        <div>
+          <h1>🎠 ¡Estás invitado!</h1>
+          <p>
+            Ven a celebrar mi cumpleaños con caballos, juegos y mucha diversión.
+            Acompáñanos para disfrutar de una jornada inolvidable entre estos hermosos animales.
+            ¡No faltes!
+          </p>
+        </div>
+        <button class="confirm-btn" id="confirmBtn">Confirmar asistencia 🎉</button>
+      </div>
     </div>
-    <button class="confirmar" onclick="confirmarAsistencia()">Confirmar asistencia 🎉</button>
   </div>
 
-  <!-- Firebase + Firestore -->
-  <script type="module">
-    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-app.js";
-    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore.js";
+  <!-- Elemento de audio para la música de fondo -->
+  <audio id="bgMusic" src="https://cdn.pixabay.com/download/audio/2021/09/11/audio_ae0fb7896d.mp3?filename=happy-birthday-to-you-6039.mp3" loop></audio>
 
+  <!-- Scripts externos -->
+  <!-- SweetAlert2 Library -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+  <!-- Canvas Confetti Library -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+  <!-- Firebase SDK v10+ (ES6 Modules) -->
+  <script type="module">
+    // ==== CONFIGURACIÓN DE FIREBASE (REEMPLAZAR CON TUS PROPIAS CREDENCIALES) ====
     const firebaseConfig = {
-      apiKey: "AIzaSyDsBilZaGjEyO-ZqEXFowXrjFT-794TPlE",
-      authDomain: "carta-cumple.firebaseapp.com",
-      projectId: "carta-cumple",
-      storageBucket: "carta-cumple.firebasestorage.app",
-      messagingSenderId: "431208595093",
-      appId: "1:431208595093:web:88cc6628ab14ed8835659c"
+      apiKey: "TU_API_KEY",
+      authDomain: "TU_PROJECT_ID.firebaseapp.com",
+      projectId: "TU_PROJECT_ID",
+      storageBucket: "TU_PROJECT_ID.appspot.com",
+      messagingSenderId: "TU_MESSAGING_SENDER_ID",
+      appId: "TU_APP_ID"
+      // Si usas measurements o otros servicios, agrégalos aquí
     };
 
+    // Importar módulos necesarios de Firebase
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
+    import {
+      getFirestore,
+      collection,
+      addDoc,
+      serverTimestamp
+    } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+
+    // Inicializar Firebase y Firestore
     const app = initializeApp(firebaseConfig);
     const db = getFirestore(app);
+    // ==============================================================================
 
-    // Guardar confirmación
-    window.guardarConfirmacion = async (nombre, personas) => {
-      try {
-        await addDoc(collection(db, "confirmaciones"), {
-          nombre: nombre,
-          personas: parseInt(personas),
-          timestamp: serverTimestamp()
-        });
-        console.log("✅ Confirmación guardada en Firestore.");
-      } catch (e) {
-        console.error("❌ Error al guardar en Firestore: ", e);
-      }
-    };
-  </script>
+    document.addEventListener("DOMContentLoaded", () => {
+      // Elementos del DOM
+      const envelope = document.getElementById("envelope");
+      const openBtn = document.getElementById("openInvitationBtn");
+      const startScreen = document.getElementById("startScreen");
+      const invitationContainer = document.getElementById("invitationContainer");
+      const invitationCard = document.getElementById("invitationCard");
+      const bgMusic = document.getElementById("bgMusic");
+      const confirmBtn = document.getElementById("confirmBtn");
 
-  <!-- Funcionalidad principal -->
-  <script>
-    function abrirInvitacion() {
-      const pantalla = document.getElementById("pantallaSobre");
-      const carta = document.getElementById("cartaInvitacion");
-      const musica = document.getElementById("musicaFondo");
+      let musicPlayed = false; // Para controlar intento de reproducción
 
-      // Ocultar sobre con animación
-      pantalla.style.opacity = 0;
-      pantalla.style.transform = "scale(0.9)";
-      setTimeout(() => {
-        pantalla.style.display = "none";
-        carta.style.display = "flex";
-        carta.style.animation = "fadeIn 1s";
-        lanzarConfeti();
-        musica.play().catch(() => {
-          console.warn("🎵 Autoplay bloqueado");
-        });
-      }, 700);
-    }
-
-    function lanzarConfeti() {
-      for (let i = 0; i < 3; i++) {
+      // Función para lanzar confeti
+      function lanzarConfeti() {
         confetti({
-          particleCount: 200,
-          spread: 100,
-          origin: { y: 0.6 }
+          particleCount: 150,
+          spread: 60,
+          origin: { y: 0.3 }
         });
       }
-    }
 
-    function confirmarAsistencia() {
-      Swal.fire({
-        title: 'Confirmar asistencia',
-        html:
-          '<input id="nombre" class="swal2-input" placeholder="Tu nombre">' +
-          '<input id="personas" type="number" class="swal2-input" placeholder="¿Cuántas personas asistirán?">',
-        confirmButtonText: 'Enviar',
-        showCancelButton: true,
-        cancelButtonText: 'Cancelar',
-        preConfirm: () => {
-          const nombre = document.getElementById('nombre').value;
-          const personas = document.getElementById('personas').value;
-          if (!nombre || !personas) {
-            Swal.showValidationMessage('Por favor completa todos los campos');
-          }
-          return { nombre, personas };
+      // Intentar reproducir música (puede ser bloqueada hasta interacción)
+      function playMusic() {
+        if (!musicPlayed) {
+          bgMusic.play().catch(() => {
+            // Si falla, se intentará reproducir al próximo clic del usuario
+          });
+          musicPlayed = true;
         }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          confetti();
-          guardarConfirmacion(result.value.nombre, result.value.personas);
-          Swal.fire(
-            '¡Gracias!',
-            `Gracias, ${result.value.nombre}. ¡Te esperamos con ${result.value.personas} persona(s)! 🎊`,
-            'success'
-          );
-        }
+      }
+
+      // Manejar clic en el botón "Abrir invitación"
+      openBtn.addEventListener("click", () => {
+        // Animar cierre del sobre
+        envelope.classList.add("open");
+        // Intentar reproducir música en este momento
+        playMusic();
+        // Después de la animación del sobre (1s), mostrar la tarjeta
+        setTimeout(() => {
+          // Ocultar pantalla de inicio
+          startScreen.style.display = "none";
+          // Mostrar contenedor de invitación
+          invitationContainer.style.display = "flex";
+          // Pequeño retraso antes de mostrar la tarjeta para animación
+          requestAnimationFrame(() => {
+            invitationCard.classList.add("show");
+            // Lanzar confeti cuando aparezca la tarjeta
+            lanzarConfeti();
+          });
+        }, 1000);
       });
-    }
-  </script>
 
+      // En caso de que el navegador bloquee el autoplay, reproducir en primer toque
+      document.body.addEventListener("click", playMusic, { once: true });
+
+      // Manejar clic en "Confirmar asistencia"
+      confirmBtn.addEventListener("click", () => {
+        Swal.fire({
+          title: 'Confirmar asistencia 🎉',
+          html:
+            '<input id="swal-input1" class="swal2-input" placeholder="Nombre completo">' +
+            '<input id="swal-input2" type="number" min="1" class="swal2-input" placeholder="¿Cuántas personas asistirán?">',
+          focusConfirm: false,
+          showCancelButton: true,
+          confirmButtonText: 'Enviar',
+          preConfirm: () => {
+            const nombre = document.getElementById('swal-input1').value.trim();
+            const personas = document.getElementById('swal-input2').value.trim();
+            if (!nombre || !personas) {
+              Swal.showValidationMessage('Por favor ingresa ambos campos');
+              return false;
+            }
+            if (isNaN(personas) || Number(personas) < 1) {
+              Swal.showValidationMessage('Ingresa un número válido de personas');
+              return false;
+            }
+            return { nombre, personas: Number(personas) };
+          }
+        }).then(async (result) => {
+          if (result.isConfirmed && result.value) {
+            const { nombre, personas } = result.value;
+
+            // Lanzar confeti al confirmar
+            lanzarConfeti();
+
+            // Mostrar mensaje de agradecimiento
+            await Swal.fire({
+              icon: 'success',
+              title: `¡Gracias, ${nombre}!`,
+              text: `Hemos registrado ${personas} persona(s) para el evento.`,
+              confirmButtonText: 'Cerrar'
+            });
+
+            // Guardar la confirmación en Firestore
+            try {
+              await addDoc(collection(db, "confirmaciones"), {
+                nombre: nombre,
+                personas: personas,
+                timestamp: serverTimestamp()
+              });
+              // Opcional: puedes mostrar una confirmación silenciosa en consola
+              console.log("Confirmación guardada con éxito");
+            } catch (error) {
+              console.error("Error guardando en Firestore: ", error);
+              // Si ocurre error, notificar al usuario
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'No se pudo guardar la confirmación. Por favor, inténtalo de nuevo.'
+              });
+            }
+          }
+        });
+      });
+    });
+  </script>
 </body>
 </html>
