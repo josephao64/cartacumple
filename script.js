@@ -1,152 +1,141 @@
-// Importar funciones necesarias de Firebase
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.0.0/firebase-app.js";
-import {
-  getFirestore,
-  collection,
-  addDoc,
-  serverTimestamp,
-} from "https://www.gstatic.com/firebasejs/10.0.0/firebase-firestore.js";
+const envelope = document.getElementById("envelope");
+const card = document.getElementById("card");
+const musica = document.getElementById("musica");
+const details = document.getElementById("details");
+const btnMostrarForm = document.getElementById("btn-mostrar-form");
+const form = document.getElementById("rsvp-form");
+const mensajeConfirmacion = document.getElementById("mensaje-confirmacion");
 
-// Tu web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyDsBilZaGjEyO-ZqEXFowXrjFT-794TPlE",
-  authDomain: "carta-cumple.firebaseapp.com",
-  projectId: "carta-cumple",
-  storageBucket: "carta-cumple.firebasestorage.app",
-  messagingSenderId: "431208595093",
-  appId: "1:431208595093:web:88cc6628ab14ed8835659c",
-};
+// Al hacer clic en el sobre, mostrar la tarjeta con animación
+envelope.addEventListener("click", () => {
+  gsap.to(envelope, {
+    scale: 0,
+    duration: 0.6,
+    ease: "power2.in",
+    onComplete: () => {
+      envelope.style.display = "none";
+      card.style.display = "block";
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+      // Preparar animación de letras
+      prepararAnimacionDeLetras();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const initialCard = document.getElementById("initialCard");
-  const openBtn = document.getElementById("openInvitationBtn");
-  const initialContainer = document.getElementById("initialContainer");
-  const invitationContainer = document.getElementById("invitationContainer");
-  const invitationCard = document.getElementById("invitationCard");
-  const confirmBtn = document.getElementById("confirmBtn");
-
-  let smallConfettiInterval = null;
-
-  // Función para lanzar un estallido grande de confeti (color café)
-  function confetiGrande() {
-    confetti({
-      particleCount: 150,
-      spread: 80,
-      origin: { y: 0.3 },
-      colors: ["#8B4513"], // Café
-    });
-  }
-
-  // Función para lanzar pequeños destellos de confeti periódicos (color café)
-  function iniciarConfetiContinuo() {
-    smallConfettiInterval = setInterval(() => {
-      confetti({
-        particleCount: 15,
-        spread: 40,
-        origin: { y: 0.2 },
-        colors: ["#8B4513"],
-      });
-    }, 2500);
-  }
-
-  // Manejar clic en "Abrir invitación"
-  openBtn.addEventListener("click", () => {
-    // Animar la tarjeta inicial para salir
-    initialCard.classList.add("open");
-
-    // Después de la animación de salida (0.8s), mostrar la carta interior
-    setTimeout(() => {
-      // Ocultar el contenedor inicial
-      initialContainer.style.display = "none";
-
-      // Mostrar el contenedor de la invitación
-      invitationContainer.style.display = "flex";
-
-      // Animar aparición de la carta interior
-      requestAnimationFrame(() => {
-        invitationCard.classList.add("show");
-
-        // Lanzar confeti grande al aparecer la carta interior
-        confetiGrande();
-
-        // Iniciar confeti continuo (poco a poco)
-        iniciarConfetiContinuo();
-      });
-    }, 800);
+      // Mostrar tarjeta
+      gsap.fromTo(card,
+        { scale: 0.8, opacity: 0 },
+        { duration: 1, scale: 1, opacity: 1, ease: "back.out(1.7)", onComplete: animarContenido }
+      );
+    }
   });
 
-  // Manejar clic en "Confirmar asistencia"
-  confirmBtn.addEventListener("click", () => {
-    Swal.fire({
-      title: "Confirmar asistencia 🎉",
-      html:
-        '<input id="swal-input1" class="swal2-input" placeholder="Nombre completo">' +
-        '<input id="swal-input2" type="number" min="1" class="swal2-input" placeholder="¿Cuántas personas asistirán?">',
-      focusConfirm: false,
-      showCancelButton: true,
-      confirmButtonText: "Enviar",
-      preConfirm: () => {
-        const nombre = document
-          .getElementById("swal-input1")
-          .value.trim();
-        const personas = document
-          .getElementById("swal-input2")
-          .value.trim();
-        if (!nombre || !personas) {
-          Swal.showValidationMessage(
-            "Por favor ingresa ambos campos"
-          );
-          return false;
-        }
-        if (isNaN(personas) || Number(personas) < 1) {
-          Swal.showValidationMessage(
-            "Ingresa un número válido de personas"
-          );
-          return false;
-        }
-        return { nombre, personas: Number(personas) };
-      },
-    }).then(async (result) => {
-      if (result.isConfirmed && result.value) {
-        const { nombre, personas } = result.value;
+  // Reproducir música si está en pausa
+  if (musica.paused) musica.play();
 
-        // Lanzar confeti al confirmar (estallido medio, color café)
-        confetti({
-          particleCount: 80,
-          spread: 60,
-          origin: { y: 0.3 },
-          colors: ["#8B4513"],
-        });
-
-        // Mostrar mensaje de agradecimiento
-        await Swal.fire({
-          icon: "success",
-          title: `¡Gracias, ${nombre}!`,
-          text: `Hemos registrado ${personas} persona(s) para el evento.`,
-          confirmButtonText: "Cerrar",
-        });
-
-        // Guardar la confirmación en Firestore
-        try {
-          await addDoc(collection(db, "confirmaciones"), {
-            nombre: nombre,
-            personas: personas,
-            timestamp: serverTimestamp(),
-          });
-          console.log("Confirmación guardada con éxito");
-        } catch (error) {
-          console.error("Error guardando en Firestore: ", error);
-          Swal.fire({
-            icon: "error",
-            title: "Error",
-            text: "No se pudo guardar la confirmación. Por favor, inténtalo de nuevo.",
-          });
-        }
-      }
-    });
-  });
+  // Iniciar confeti
+  startConfetti();
 });
+
+// Envuelve cada letra en un span para animarlas
+function prepararAnimacionDeLetras() {
+  const elems = card.querySelectorAll(".animar-letras");
+  elems.forEach(el => {
+    const text = el.textContent;
+    el.innerHTML = "";
+    text.split("").forEach(char => {
+      const span = document.createElement("span");
+      span.textContent = char;
+      el.appendChild(span);
+    });
+  });
+}
+
+// Una vez que la tarjeta aparece, animamos letras, detalles y botón
+function animarContenido() {
+  // Animar título y subtítulo
+  const allSpans = card.querySelectorAll(".animar-letras span");
+  gsap.fromTo(allSpans,
+    { opacity: 0, y: 20 },
+    { opacity: 1, y: 0, stagger: 0.05, duration: 0.6, ease: "back.out(1.5)" }
+  );
+
+  // Mostrar detalles después de las letras
+  gsap.to(details, { opacity: 1, delay: 1.2, duration: 0.8 });
+
+  // Mostrar botón para mostrar formulario después de detalles
+  gsap.to(btnMostrarForm, { opacity: 1, delay: 1.8, duration: 0.8 });
+}
+
+// Al hacer clic en el botón "Confirmar asistencia", mostrar formulario centrado
+btnMostrarForm.addEventListener("click", () => {
+  gsap.to(form, { display: "flex", opacity: 1, duration: 0.8 });
+});
+
+// Manejo del formulario al enviar
+form.addEventListener("submit", function (e) {
+  e.preventDefault();
+  // Ocultar formulario y botón
+  form.style.display = "none";
+  btnMostrarForm.style.display = "none";
+  // Mostrar mensaje de confirmación centrado
+  mensajeConfirmacion.style.display = "block";
+  // Después de 2.5 segundos, esconder mensaje y volver a mostrar botón
+  setTimeout(() => {
+    mensajeConfirmacion.style.display = "none";
+    btnMostrarForm.style.display = "block";
+    // Opcional: restaurar opacidad con GSAP
+    gsap.fromTo(btnMostrarForm, { opacity: 0 }, { opacity: 1, duration: 0.6 });
+  }, 2500);
+});
+
+// ======= Código del confeti marrón/dorado =======
+const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+let particles = [];
+
+function resizeCanvas() {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resizeCanvas);
+resizeCanvas();
+
+function createParticle() {
+  const colors = ["#a67c52", "#d4af37", "#8b5e3c"];
+  return {
+    x: Math.random() * canvas.width,
+    y: -20,
+    size: Math.random() * 8 + 4,
+    speed: Math.random() * 2 + 1,
+    color: colors[Math.floor(Math.random() * colors.length)],
+    rotation: Math.random() * 360,
+    rotateSpeed: Math.random() * 5
+  };
+}
+
+function drawParticles() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particles.forEach(p => {
+    ctx.save();
+    ctx.translate(p.x, p.y);
+    ctx.rotate((p.rotation * Math.PI) / 180);
+    ctx.fillStyle = p.color;
+    ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+    ctx.restore();
+
+    p.y += p.speed;
+    p.rotation += p.rotateSpeed;
+
+    if (p.y > canvas.height) {
+      p.y = -20;
+      p.x = Math.random() * canvas.width;
+    }
+  });
+  requestAnimationFrame(drawParticles);
+}
+
+function startConfetti() {
+  for (let i = 0; i < 100; i++) {
+    particles.push(createParticle());
+  }
+  drawParticles();
+}
+// ================================================================
