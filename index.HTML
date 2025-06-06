@@ -47,12 +47,12 @@
       color: #5c5c5c;
     }
 
-    /* Canvas para confeti */
+    /* Canvas para confeti (por encima de todo) */
     canvas {
       position: fixed;
       top: 0;
       left: 0;
-      z-index: 0;
+      z-index: 3;
       pointer-events: none;
     }
 
@@ -121,7 +121,7 @@
     /* Texto principal envuelto en spans para animar letras */
     .texto-principal {
       position: absolute;
-      top: 60px;            
+      top: 60px;
       left: 50%;
       transform: translateX(-50%);
       width: 360px;
@@ -140,7 +140,7 @@
     /* "cumple 2 años!" */
     .texto-secundario {
       position: absolute;
-      top: 130px;           
+      top: 130px;
       left: 50%;
       transform: translateX(-50%);
       width: 360px;
@@ -159,7 +159,7 @@
     /* Detalles del evento dentro del círculo */
     .details {
       position: absolute;
-      top: 200px;          
+      top: 200px;
       left: 50%;
       transform: translateX(-50%);
       width: 360px;
@@ -179,22 +179,43 @@
       font-weight: 700;
     }
 
-    /* Formulario de confirmación */
+    /* Botón movido hacia abajo */
+    #btn-mostrar-form {
+      position: absolute;
+      top: 650px; /* Ajustado al fondo de la tarjeta */
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 2;
+      padding: 12px 24px;
+      background: #d4af37;
+      color: #111;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1.1em;
+      font-family: 'Little Flowers', cursive;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      opacity: 0; /* Inicialmente oculto hasta la animación */
+    }
+    #btn-mostrar-form:hover {
+      background: #f0c420;
+    }
+
+    /* Formulario de confirmación (oculto hasta hacer clic en el botón) */
     form {
       position: absolute;
-      top: 450px;          
+      top: 690px; /* Justo debajo del botón */
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
       width: 80%;
       max-width: 360px;
-      display: flex;
+      display: none;
       flex-direction: column;
       gap: 15px;
       background: rgba(255,255,255,0.85);
       padding: 15px;
       border-radius: 10px;
-      opacity: 0;
     }
     input, button {
       padding: 10px;
@@ -219,7 +240,7 @@
     /* Mensaje de confirmación */
     #mensaje-confirmacion {
       position: absolute;
-      top: 530px;          
+      top: 730px; /* Debajo del formulario */
       left: 50%;
       transform: translateX(-50%);
       z-index: 2;
@@ -262,11 +283,14 @@
         <span>+502 4289-2535</span>
       </div>
 
+      <!-- Botón que muestra el formulario -->
+      <button id="btn-mostrar-form">Confirmar asistencia</button>
+
       <!-- Formulario de confirmación -->
       <form id="rsvp-form">
         <input type="text" name="nombre" placeholder="Tu nombre" required />
         <input type="tel" name="telefono" placeholder="Tu teléfono" required />
-        <button type="submit">Confirmar asistencia</button>
+        <button type="submit">Enviar</button>
       </form>
       <div id="mensaje-confirmacion">¡Gracias por confirmar! 🎉</div>
     </div>
@@ -282,6 +306,7 @@
     const card = document.getElementById("card");
     const musica = document.getElementById("musica");
     const details = document.getElementById("details");
+    const btnMostrarForm = document.getElementById("btn-mostrar-form");
     const form = document.getElementById("rsvp-form");
 
     envelope.addEventListener("click", () => {
@@ -326,7 +351,7 @@
       });
     }
 
-    // Una vez que la tarjeta aparece, animamos letras, detalles y formulario
+    // Una vez que la tarjeta aparece, animamos letras y detalles
     function animarContenido() {
       // Animar título y subtítulo
       const allSpans = card.querySelectorAll(".animar-letras span");
@@ -338,9 +363,15 @@
       // Mostrar detalles después de las letras
       gsap.to(details, { opacity: 1, delay: 1.2, duration: 0.8 });
 
-      // Mostrar formulario después de detalles
-      gsap.to(form, { opacity: 1, delay: 1.8, duration: 0.8 });
+      // Mostrar botón para mostrar formulario después de detalles
+      gsap.to(btnMostrarForm, { opacity: 1, delay: 1.8, duration: 0.8 });
     }
+
+    // Al hacer clic en el botón "Confirmar asistencia", ocultar botón y mostrar inputs
+    btnMostrarForm.addEventListener("click", () => {
+      btnMostrarForm.style.display = "none";
+      gsap.to(form, { display: "flex", opacity: 1, duration: 0.8 });
+    });
 
     // Manejo del formulario
     form.addEventListener("submit", function (e) {
