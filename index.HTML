@@ -3,8 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Invitación  – Raquel 2 años</title>
-
+  <title>Invitación Spirit – Raquel 2 años</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,11 +16,11 @@
       <span>Abrir invitación</span>
     </div>
 
-    <!-- Tarjeta con fondo de la imagen enviada -->
+    <!-- Tarjeta con fondo -->
     <div class="card" id="card">
       <!-- "Raquel" animado letra por letra -->
       <div class="texto-principal animar-letras">Raquel</div>
-      <!-- "cumple 2 años!" animado -->
+      <!-- "cumple 2 años!" con espacios inviolables -->
       <div class="texto-secundario animar-letras">cumple&nbsp;2&nbsp;años</div>
 
       <!-- Detalles del evento -->
@@ -29,10 +28,10 @@
         <span><strong>Casa Jardín Dominga</strong></span>
         <span><strong>22 de junio · 3:00 PM</strong></span>
         <span><strong>Confirmar antes del 19 de junio</strong></span>
-        <span>+502 4289‐2535</span>
+        <span>+502 4289-2535</span>
       </div>
 
-      <!-- Formulario de confirmación (aparecerá en el centro) -->
+      <!-- Formulario de confirmación (aparece al centro) -->
       <form id="rsvp-form">
         <input type="text" name="nombre" placeholder="Tu nombre" required />
         <input type="tel" name="telefono" placeholder="Tu teléfono" required />
@@ -52,7 +51,9 @@
     <source src="https://www.bensound.com/bensound-music/bensound-jazzyfrenchy.mp3" type="audio/mpeg" />
   </audio>
 
+  <!-- GSAP para animaciones -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
-  <script src="script.js"></script>
+  <!-- Tu lógica de invitación + Firebase -->
+  <script type="module" src="script.js"></script>
 </body>
 </html>
